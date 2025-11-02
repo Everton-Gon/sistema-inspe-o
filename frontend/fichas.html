@@ -1,0 +1,1576 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fichas de Não Conformidade - MALLORY</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            margin-left: 0.75rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title p {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 300px;
+            max-width: 100%;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #faa72b 0%, #fbbb40 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(250, 167, 43, 0.4);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 1000px;
+        }
+
+        .table thead {
+            background: #f8f9fa;
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+            transform: scale(1.1);
+        }
+
+        .view-btn:hover {
+            color: #3498db;
+        }
+
+        .edit-btn:hover {
+            color: #f39c12;
+        }
+
+        .delete-btn:hover {
+            color: #e74c3c;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 1rem;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 1200px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+            font-size: 0.9rem;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        input.form-control,
+        select.form-control,
+        textarea.form-control {
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: border-color 0.3s;
+        }
+
+        input.form-control:focus,
+        select.form-control:focus,
+        textarea.form-control:focus {
+            outline: none;
+            border-color: #fda619;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .divider {
+            height: 1px;
+            background: #dee2e6;
+            margin: 2rem 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+
+        .btn-modal {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-modal-outline {
+            background: white;
+            border: 1px solid #dee2e6;
+            color: #495057;
+        }
+
+        .btn-modal-outline:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-modal-primary {
+            background: linear-gradient(135deg, #faa72b 0%, #fbbb40 100%);
+            color: white;
+        }
+
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(250, 167, 43, 0.4);
+        }
+
+        /* Tabs */
+        .tabs-container {
+            background: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .tabs {
+            display: flex;
+            list-style: none;
+            margin: 0;
+            padding: 0;
+            overflow-x: auto;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+            color: #6c757d;
+            border-bottom: 3px solid transparent;
+            background: none;
+            border: none;
+            font-size: 0.9rem;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            color: #e69812;
+            border-bottom: 3px solid #bf8f17;
+            background: white;
+            font-weight: 600;
+        }
+
+        .tab:hover:not(.active) {
+            background: #e9ecef;
+        }
+
+        .tab-content {
+            display: none;
+            padding: 2rem 0;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 5 Porquês */
+        .porques-section {
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+        }
+
+        .porque-item {
+            margin-bottom: 1rem;
+        }
+
+        .porque-item label {
+            display: block;
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .porque-item input {
+            width: 100%;
+        }
+
+        /* Custos */
+        .custos-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            background: #f8f9fa;
+            padding: 1.5rem;
+            border-radius: 8px;
+        }
+
+        .custo-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .custo-label {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .custo-total {
+            background: #fff3cd;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 700;
+            color: #856404;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .main-content {
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .modal {
+                width: 98%;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .tabs {
+                font-size: 0.85rem;
+            }
+
+            .tab {
+                padding: 0.75rem 1rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <div class="logo-text">
+                <h2>MALLORY</h2>
+                <p>Sistema de Inspeção</p>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="dashboard.html" class="nav-link">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="registros.html" class="nav-link">
+                <i class="fas fa-list-check"></i>
+                <span>Registros</span>
+            </a>
+            <a href="fnc.html" class="nav-link active">
+                <i class="fas fa-exclamation-triangle"></i>
+                <span>FNC</span>
+            </a>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar">U</div>
+            <div class="user-details">
+                <p class="user-name">Usuário</p>
+                <p class="user-role">Qualidade</p>
+            </div>
+            <button class="logout-btn" title="Sair do sistema">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h1><i class="fas fa-exclamation-triangle"></i> Fichas de Não Conformidade</h1>
+                <p>Gerencie e acompanhe todas as não conformidades identificadas</p>
+            </div>
+            <div class="header-actions">
+                <input type="text" id="search-input" placeholder="Buscar por FNC, produto..." class="form-control">
+                <button class="btn btn-primary" id="new-fnc-btn">
+                    <i class="fas fa-plus"></i>
+                    Nova FNC
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nº FNC</th>
+                            <th>Data</th>
+                            <th>Produto</th>
+                            <th>Modelo</th>
+                            <th>Qtd NC</th>
+                            <th>Decisão</th>
+                            <th>Status</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="fnc-table-body">
+                        <tr>
+                            <td colspan="8" style="text-align: center; padding: 2rem; color: #6c757d;">
+                                <i class="fas fa-inbox" style="font-size: 2rem;"></i>
+                                <p style="margin-top: 1rem;">Nenhuma FNC encontrada. Clique em "Nova FNC" para criar uma.</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Criação/Edição -->
+    <div class="modal-overlay" id="fnc-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Nova Ficha de Não Conformidade</h2>
+                <button class="close-btn" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="fnc-form">
+                    <!-- Tabs -->
+                    <div class="tabs-container">
+                        <ul class="tabs">
+                            <li class="tab active" data-tab="identificacao">
+                                <i class="fas fa-info-circle"></i> Identificação
+                            </li>
+                            <li class="tab" data-tab="descricao">
+                                <i class="fas fa-file-alt"></i> Descrição NC
+                            </li>
+                            <li class="tab" data-tab="analise">
+                                <i class="fas fa-search"></i> Análise Causas
+                            </li>
+                            <li class="tab" data-tab="acoes">
+                                <i class="fas fa-tasks"></i> Ações
+                            </li>
+                            <li class="tab" data-tab="custos">
+                                <i class="fas fa-dollar-sign"></i> Custos
+                            </li>
+                            <li class="tab" data-tab="decisao">
+                                <i class="fas fa-check-circle"></i> Decisão
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab 1: Identificação -->
+                    <div class="tab-content active" id="identificacao">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-clipboard"></i> Dados da FNC</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">Nº da FNC</label>
+                                    <input type="text" name="numero_fnc" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Data da FNC</label>
+                                    <input type="date" name="data_fnc" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">De (Departamento)</label>
+                                    <input type="text" name="de_departamento" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Para (Departamento)</label>
+                                    <input type="text" name="para_departamento" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-box"></i> Identificação do Produto</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">Código</label>
+                                    <input type="text" name="codigo" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label required">Produto</label>
+                                    <input type="text" name="produto" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Modelo</label>
+                                    <input type="text" name="modelo" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">NF / PO</label>
+                                    <input type="text" name="nf_po" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Num. de Série</label>
+                                    <input type="text" name="num_serie" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Data Recebimento</label>
+                                    <input type="date" name="data_recebimento" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Quantidade Total</label>
+                                    <input type="number" name="quantidade" class="form-control" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Qtd Não Conforme</label>
+                                    <input type="number" name="qtd_nao_conforme" class="form-control" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Qtd Inspecionadas</label>
+                                    <input type="number" name="qtd_inspecionadas" class="form-control" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Índice (%)</label>
+                                    <input type="number" name="indice" class="form-control" step="0.01" readonly style="background: #e9ecef;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Descrição NC -->
+                    <div class="tab-content" id="descricao">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-exclamation-circle"></i> Descrição da Não Conformidade</h3>
+                            
+                            <div class="form-group">
+                                <label class="form-label required">Fato / Não Conformidade</label>
+                                <textarea name="fato" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label required">Evidência Objetiva</label>
+                                <textarea name="evidencia" class="form-control" rows="4" required></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Etapa</label>
+                                <select name="etapa" class="form-control">
+                                    <option value="">Selecione</option>
+                                    <option value="Recebimento">Recebimento</option>
+                                    <option value="Produção">Produção</option>
+                                    <option value="Montagem">Montagem</option>
+                                    <option value="Inspeção Final">Inspeção Final</option>
+                                    <option value="Expedição">Expedição</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Análise de Causas -->
+                    <div class="tab-content" id="analise">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-microscope"></i> Análise dos 5 Porquês</h3>
+                            <p style="color: #6c757d; margin-bottom: 1rem;">
+                                Preencha a sequência de perguntas "Por quê?" até identificar a causa raiz da não conformidade.
+                            </p>
+
+                            <div class="porques-section">
+                                <div class="porque-item">
+                                    <label>1º Por quê?</label>
+                                    <input type="text" name="porque_1" class="form-control">
+                                </div>
+                                <div class="porque-item">
+                                    <label>2º Por quê?</label>
+                                    <input type="text" name="porque_2" class="form-control">
+                                </div>
+                                <div class="porque-item">
+                                    <label>3º Por quê?</label>
+                                    <input type="text" name="porque_3" class="form-control">
+                                </div>
+                                <div class="porque-item">
+                                    <label>4º Por quê?</label>
+                                    <input type="text" name="porque_4" class="form-control">
+                                </div>
+                                <div class="porque-item">
+                                    <label>5º Por quê? (Causa Raiz)</label>
+                                    <input type="text" name="porque_5" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 4: Ações -->
+                    <div class="tab-content" id="acoes">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-bolt"></i> Ação Imediata</h3>
+                            <div class="form-group">
+                                <label class="form-label">O que fazer com o produto/lote/ordem?</label>
+                                <textarea name="acao_imediata" class="form-control" rows="3"></textarea>
+                            </div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Método de Retrabalho</label>
+                                    <select name="metodo_retrabalho" class="form-control">
+                                        <option value="">Selecione</option>
+                                        <option value="Retrabalho">Retrabalho</option>
+                                        <option value="Seleção">Seleção</option>
+                                        <option value="Refugo">Refugo</option>
+                                        <option value="Devolução Fornecedor">Devolução Fornecedor</option>
+                                        <option value="Deriv. Tempor.">Derivação Temporária</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Responsável Ações</label>
+                                    <input type="text" name="responsavel_acoes" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-wrench"></i> Correção</h3>
+                            <div class="form-group">
+                                <label class="form-label">O que é feito para resolver este problema?</label>
+                                <textarea name="correcao" class="form-control" rows="3"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-shield-alt"></i> Ação Corretiva</h3>
+                            <div class="form-group">
+                                <label class="form-label">O que é feito para evitar a recorrência?</label>
+                                <textarea name="acao_corretiva" class="form-control" rows="3"></textarea>
+                            </div>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Responsável</label>
+                                    <input type="text" name="responsavel_corretiva" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Data Prazo</label>
+                                    <input type="date" name="data_prazo" class="form-control">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 5: Custos -->
+                    <div class="tab-content" id="custos">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-calculator"></i> Custos Estimados</h3>
+                            
+                            <div class="custos-grid">
+                                <div class="custo-item">
+                                    <label class="custo-label">Horas Totais</label>
+                                    <input type="number" name="total_horas" class="form-control" step="0.01" min="0">
+                                </div>
+                                <div class="custo-item">
+                                    <label class="custo-label">Taxa Trabalho (R$)</label>
+                                    <input type="number" name="taxa_trabalho" class="form-control" step="0.01" min="0">
+                                </div>
+                                <div class="custo-item">
+                                    <label class="custo-label">Custo Material (R$)</label>
+                                    <input type="number" name="custo_material" class="form-control" step="0.01" min="0">
+                                </div>
+                                <div class="custo-item">
+                                    <label class="custo-label">Custo Refugo (R$)</label>
+                                    <input type="number" name="custo_refugo" class="form-control" step="0.01" min="0">
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label">Taxa Câmbio USD</label>
+                                    <input type="number" name="taxa_cambio" class="form-control" step="0.01" min="0">
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Custo Total (USD)</label>
+                                    <input type="number" name="custo_total_usd" class="form-control" step="0.01" readonly style="background: #e9ecef;">
+                                </div>
+                            </div>
+
+                            <div class="custo-total" style="margin-top: 1rem;">
+                                <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">CUSTO TOTAL (R$)</div>
+                                <div id="custo-total-display">R$ 0,00</div>
+                            </div>
+
+                            <div style="margin-top: 1rem; padding: 1rem; background: #fff3cd; border-radius: 8px; color: #856404;">
+                                <i class="fas fa-info-circle"></i>
+                                <strong>Nota:</strong> Todos os custos de envio de material serão por conta do fornecedor.
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 6: Decisão Final -->
+                    <div class="tab-content" id="decisao">
+                        <div class="form-section">
+                            <h3 class="section-title"><i class="fas fa-gavel"></i> Decisão Final</h3>
+                            
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label class="form-label required">Decisão</label>
+                                    <select name="decisao_final" class="form-control" required>
+                                        <option value="">Selecione</option>
+                                        <option value="Aprovada">Aprovada</option>
+                                        <option value="Reprovada">Reprovada</option>
+                                        <option value="Pendente">Pendente</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label class="form-label">Status da FNC</label>
+                                    <select name="status" class="form-control">
+                                        <option value="Aberta">Aberta</option>
+                                        <option value="Em Análise">Em Análise</option>
+                                        <option value="Aguardando Ação">Aguardando Ação</option>
+                                        <option value="Concluída">Concluída</option>
+                                        <option value="Cancelada">Cancelada</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label class="form-label">Observações / Comentários</label>
+                                <textarea name="observacoes" class="form-control" rows="4"></textarea>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="form-section">
+                                <h3 class="section-title"><i class="fas fa-clipboard-check"></i> Inspeção Após Retrabalho</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">Resultado Inspeção</label>
+                                        <select name="inspecao_resultado" class="form-control">
+                                            <option value="">Selecione</option>
+                                            <option value="Aprovado">Aprovado</option>
+                                            <option value="Rejeitado">Rejeitado</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Data Inspeção</label>
+                                        <input type="date" name="data_inspecao" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="divider"></div>
+
+                            <div class="form-section">
+                                <h3 class="section-title"><i class="fas fa-user-check"></i> Aprovações</h3>
+                                <div class="form-grid">
+                                    <div class="form-group">
+                                        <label class="form-label">QC Department</label>
+                                        <input type="text" name="aprovacao_qc" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Responsável</label>
+                                        <input type="text" name="aprovacao_responsavel" class="form-control">
+                                    </div>
+                                    <div class="form-group">
+                                        <label class="form-label">Quality Manager</label>
+                                        <input type="text" name="aprovacao_manager" class="form-control">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-modal btn-modal-outline" id="modal-cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-modal btn-modal-primary">Salvar FNC</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização -->
+    <div class="modal-overlay" id="view-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="view-title">Detalhes da FNC</h2>
+                <button class="close-btn" id="view-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="tabs-container">
+                    <ul class="tabs">
+                        <li class="tab active" data-tab="view-identificacao">Identificação</li>
+                        <li class="tab" data-tab="view-descricao">Descrição</li>
+                        <li class="tab" data-tab="view-analise">Análise</li>
+                        <li class="tab" data-tab="view-acoes">Ações</li>
+                        <li class="tab" data-tab="view-custos">Custos</li>
+                        <li class="tab" data-tab="view-decisao">Decisão</li>
+                    </ul>
+                </div>
+
+                <div class="tab-content active" id="view-identificacao">
+                    <div class="form-section">
+                        <h3 class="section-title">Dados da FNC</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Nº FNC</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-numero_fnc">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Data</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-data_fnc">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">De</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-de_departamento">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Para</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-para_departamento">-</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="divider"></div>
+                    <div class="form-section">
+                        <h3 class="section-title">Produto</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Código</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-codigo">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Produto</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-produto">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Modelo</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-modelo">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Qtd NC</div>
+                                <div style="font-weight: 600; font-size: 1.1rem; color: #e74c3c;" id="view-qtd_nao_conforme">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="view-descricao">
+                    <div class="form-section">
+                        <h3 class="section-title">Não Conformidade</h3>
+                        <div style="margin-bottom: 1rem;">
+                            <div style="color: #6c757d; font-size: 0.9rem; margin-bottom: 0.5rem;">Fato</div>
+                            <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px;" id="view-fato">-</div>
+                        </div>
+                        <div>
+                            <div style="color: #6c757d; font-size: 0.9rem; margin-bottom: 0.5rem;">Evidência</div>
+                            <div style="padding: 1rem; background: #f8f9fa; border-radius: 8px;" id="view-evidencia">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="view-analise">
+                    <div class="form-section">
+                        <h3 class="section-title">5 Porquês</h3>
+                        <div class="porques-section">
+                            <div style="margin-bottom: 1rem;">
+                                <strong>1º Por quê?</strong>
+                                <div id="view-porque_1" style="margin-top: 0.5rem; color: #495057;">-</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>2º Por quê?</strong>
+                                <div id="view-porque_2" style="margin-top: 0.5rem; color: #495057;">-</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>3º Por quê?</strong>
+                                <div id="view-porque_3" style="margin-top: 0.5rem; color: #495057;">-</div>
+                            </div>
+                            <div style="margin-bottom: 1rem;">
+                                <strong>4º Por quê?</strong>
+                                <div id="view-porque_4" style="margin-top: 0.5rem; color: #495057;">-</div>
+                            </div>
+                            <div>
+                                <strong>5º Por quê? (Causa Raiz)</strong>
+                                <div id="view-porque_5" style="margin-top: 0.5rem; color: #e74c3c; font-weight: 600;">-</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="view-acoes">
+                    <div class="form-section">
+                        <h3 class="section-title">Ações</h3>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong>Ação Imediata</strong>
+                            <div id="view-acao_imediata" style="margin-top: 0.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">-</div>
+                        </div>
+                        <div style="margin-bottom: 1.5rem;">
+                            <strong>Correção</strong>
+                            <div id="view-correcao" style="margin-top: 0.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">-</div>
+                        </div>
+                        <div>
+                            <strong>Ação Corretiva</strong>
+                            <div id="view-acao_corretiva" style="margin-top: 0.5rem; padding: 1rem; background: #f8f9fa; border-radius: 8px;">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="view-custos">
+                    <div class="form-section">
+                        <h3 class="section-title">Custos</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Horas</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-total_horas">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Taxa Trabalho</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-taxa_trabalho">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Custo Material</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-custo_material">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Custo Refugo</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-custo_refugo">-</div>
+                            </div>
+                        </div>
+                        <div class="custo-total" style="margin-top: 1.5rem;">
+                            <div style="font-size: 0.9rem; margin-bottom: 0.5rem;">CUSTO TOTAL</div>
+                            <div id="view-custo_total">R$ 0,00</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="view-decisao">
+                    <div class="form-section">
+                        <h3 class="section-title">Decisão Final</h3>
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem; margin-bottom: 1.5rem;">
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Decisão</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-decisao_final">-</div>
+                            </div>
+                            <div>
+                                <div style="color: #6c757d; font-size: 0.9rem;">Status</div>
+                                <div style="font-weight: 600; font-size: 1.1rem;" id="view-status">-</div>
+                            </div>
+                        </div>
+                        <div>
+                            <div style="color: #6c757d; font-size: 0.9rem; margin-bottom: 0.5rem;">Observações</div>
+                            <div id="view-observacoes" style="padding: 1rem; background: #f8f9fa; border-radius: 8px;">-</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" class="btn-modal btn-modal-outline" id="view-cancel-btn">Fechar</button>
+                    <button type="button" class="btn-modal btn-modal-primary" id="view-edit-btn">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração
+        const API_URL = 'http://localhost:5000/api/fnc';
+        let isEditing = false;
+        let currentFncId = null;
+        let allFncs = [];
+
+        // Toast System
+        class Toast {
+            constructor() {
+                this.createToastContainer();
+            }
+
+            createToastContainer() {
+                if (!document.getElementById('toast-container')) {
+                    const container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                    `;
+                    document.body.appendChild(container);
+                }
+            }
+
+            show(title, message, type = 'success', duration = 3000) {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    margin-bottom: 10px;
+                    padding: 15px 20px;
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    animation: slideIn 0.3s ease;
+                    min-width: 300px;
+                    border-left: 4px solid ${this.getColor(type)};
+                `;
+
+                toast.innerHTML = `
+                    <div style="flex-shrink: 0; color: ${this.getColor(type)}">${this.getIcon(type)}</div>
+                    <div style="flex-grow: 1">
+                        <div style="font-weight: 600; margin-bottom: 4px">${title}</div>
+                        <div style="color: #666; font-size: 0.9em">${message}</div>
+                    </div>
+                    <button class="toast-close" style="background: none; border: none; cursor: pointer; color: #999">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                const container = document.getElementById('toast-container');
+                container.appendChild(toast);
+
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    this.closeToast(toast);
+                });
+
+                setTimeout(() => {
+                    this.closeToast(toast);
+                }, duration);
+            }
+
+            closeToast(toast) {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => toast.remove(), 300);
+            }
+
+            getIcon(type) {
+                const icons = {
+                    success: '<i class="fas fa-check-circle"></i>',
+                    error: '<i class="fas fa-times-circle"></i>',
+                    warning: '<i class="fas fa-exclamation-circle"></i>',
+                    info: '<i class="fas fa-info-circle"></i>'
+                };
+                return icons[type] || icons.info;
+            }
+
+            getColor(type) {
+                const colors = {
+                    success: '#2ecc71',
+                    error: '#e74c3c',
+                    warning: '#f1c40f',
+                    info: '#3498db'
+                };
+                return colors[type] || colors.info;
+            }
+        }
+
+        const toast = new Toast();
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function () {
+            setupEventListeners();
+            setupTabs();
+            setupCalculos();
+            carregarFncs();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            document.getElementById('new-fnc-btn').addEventListener('click', abrirNovaFnc);
+            document.getElementById('modal-close-btn').addEventListener('click', fecharModal);
+            document.getElementById('modal-cancel-btn').addEventListener('click', fecharModal);
+            document.getElementById('fnc-form').addEventListener('submit', salvarFnc);
+            document.getElementById('view-close-btn').addEventListener('click', fecharModalVisualizacao);
+            document.getElementById('view-cancel-btn').addEventListener('click', fecharModalVisualizacao);
+            document.getElementById('view-edit-btn').addEventListener('click', editarDaVisualizacao);
+            document.getElementById('search-input').addEventListener('input', filtrarFncs);
+
+            document.getElementById('fnc-modal').addEventListener('click', function (e) {
+                if (e.target === this) fecharModal();
+            });
+
+            document.getElementById('view-modal').addEventListener('click', function (e) {
+                if (e.target === this) fecharModalVisualizacao();
+            });
+        }
+
+        // Setup Tabs
+        function setupTabs() {
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.addEventListener('click', function () {
+                    const tabId = this.getAttribute('data-tab');
+                    
+                    // Remove active de todas as tabs do mesmo container
+                    const container = this.closest('.tabs-container');
+                    container.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    
+                    // Remove active de todos os conteúdos
+                    const modalBody = this.closest('.modal-body');
+                    modalBody.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                    
+                    // Adiciona active
+                    this.classList.add('active');
+                    const content = document.getElementById(tabId);
+                    if (content) content.classList.add('active');
+                });
+            });
+        }
+
+        // Setup Cálculos Automáticos
+        function setupCalculos() {
+            // Calcular índice
+            const qtdTotal = document.querySelector('[name="quantidade"]');
+            const qtdNc = document.querySelector('[name="qtd_nao_conforme"]');
+            const qtdInsp = document.querySelector('[name="qtd_inspecionadas"]');
+            const indice = document.querySelector('[name="indice"]');
+
+            function calcularIndice() {
+                const total = parseFloat(qtdInsp.value) || 0;
+                const nc = parseFloat(qtdNc.value) || 0;
+                if (total > 0) {
+                    indice.value = ((nc / total) * 100).toFixed(2);
+                } else {
+                    indice.value = '0.00';
+                }
+            }
+
+            qtdNc.addEventListener('input', calcularIndice);
+            qtdInsp.addEventListener('input', calcularIndice);
+
+            // Calcular custos
+            const horas = document.querySelector('[name="total_horas"]');
+            const taxaTrabalho = document.querySelector('[name="taxa_trabalho"]');
+            const custoMaterial = document.querySelector('[name="custo_material"]');
+            const custoRefugo = document.querySelector('[name="custo_refugo"]');
+            const taxaCambio = document.querySelector('[name="taxa_cambio"]');
+            const custoUsd = document.querySelector('[name="custo_total_usd"]');
+
+            function calcularCustos() {
+                const h = parseFloat(horas.value) || 0;
+                const taxa = parseFloat(taxaTrabalho.value) || 0;
+                const material = parseFloat(custoMaterial.value) || 0;
+                const refugo = parseFloat(custoRefugo.value) || 0;
+                
+                const total = (h * taxa) + material + refugo;
+                document.getElementById('custo-total-display').textContent = 
+                    'R$ ' + total.toLocaleString('pt-BR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+                const cambio = parseFloat(taxaCambio.value) || 0;
+                if (cambio > 0) {
+                    custoUsd.value = (total / cambio).toFixed(2);
+                } else {
+                    custoUsd.value = '0.00';
+                }
+            }
+
+            horas.addEventListener('input', calcularCustos);
+            taxaTrabalho.addEventListener('input', calcularCustos);
+            custoMaterial.addEventListener('input', calcularCustos);
+            custoRefugo.addEventListener('input', calcularCustos);
+            taxaCambio.addEventListener('input', calcularCustos);
+        }
+
+        // Carregar FNCs
+        async function carregarFncs() {
+            try {
+                // Simulação de dados - substitua pela chamada real à API
+                allFncs = [
+                    {
+                        id: 1,
+                        numero_fnc: 'FNC-2025-001',
+                        data_fnc: '2025-01-15',
+                        produto: 'Ventilador',
+                        modelo: 'VTR-100',
+                        qtd_nao_conforme: 50,
+                        decisao_final: 'Aprovada',
+                        status: 'Concluída'
+                    },
+                    {
+                        id: 2,
+                        numero_fnc: 'FNC-2025-002',
+                        data_fnc: '2025-01-18',
+                        produto: 'Liquidificador',
+                        modelo: 'LQD-200',
+                        qtd_nao_conforme: 30,
+                        decisao_final: 'Pendente',
+                        status: 'Em Análise'
+                    }
+                ];
+                preencherTabela(allFncs);
+            } catch (error) {
+                console.error('Erro ao carregar FNCs:', error);
+                mostrarErro('Não foi possível carregar as FNCs');
+            }
+        }
+
+        // Preencher tabela
+        function preencherTabela(fncs) {
+            const tbody = document.getElementById('fnc-table-body');
+            tbody.innerHTML = '';
+
+            if (fncs.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 2rem; color: #6c757d;">
+                            <i class="fas fa-inbox" style="font-size: 2rem;"></i>
+                            <p style="margin-top: 1rem;">Nenhuma FNC encontrada. Clique em "Nova FNC" para criar uma.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            fncs.forEach(fnc => {
+                const tr = document.createElement('tr');
+                const statusClass = getStatusClass(fnc.status);
+                const decisaoClass = getDecisaoClass(fnc.decisao_final);
+
+                tr.innerHTML = `
+                    <td><strong>${fnc.numero_fnc}</strong></td>
+                    <td>${formatarData(fnc.data_fnc)}</td>
+                    <td>${fnc.produto || 'N/A'}</td>
+                    <td>${fnc.modelo || 'N/A'}</td>
+                    <td>${fnc.qtd_nao_conforme || 0}</td>
+                    <td><span class="badge ${decisaoClass}">${fnc.decisao_final || 'Pendente'}</span></td>
+                    <td><span class="badge ${statusClass}">${fnc.status || 'Aberta'}</span></td>
+                    <td class="text-right">
+                        <div class="table-actions">
+                            <button class="action-btn view-btn" onclick="visualizarFnc(${fnc.id})" title="Visualizar">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" onclick="editarFnc(${fnc.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="excluirFnc(${fnc.id})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Funções auxiliares
+        function getStatusClass(status) {
+            const classes = {
+                'Aberta': 'badge-warning',
+                'Em Análise': 'badge-info',
+                'Aguardando Ação': 'badge-warning',
+                'Concluída': 'badge-success',
+                'Cancelada': 'badge-danger'
+            };
+            return classes[status] || 'badge-info';
+        }
+
+        function getDecisaoClass(decisao) {
+            const classes = {
+                'Aprovada': 'badge-success',
+                'Reprovada': 'badge-danger',
+                'Pendente': 'badge-warning'
+            };
+            return classes[decisao] || 'badge-warning';
+        }
+
+        function formatarData(data) {
+            if (!data) return 'N/A';
+            return new Date(data).toLocaleDateString('pt-BR');
+        }
+
+        // Funções de manipulação dos modais e ações
+        function abrirNovaFnc() {
+            isEditing = false;
+            currentFncId = null;
+            document.getElementById('fnc-form').reset();
+            document.getElementById('modal-title').textContent = 'Nova Ficha de Não Conformidade';
+            document.getElementById('fnc-modal').style.display = 'flex';
+            setTimeout(() => document.getElementById('fnc-modal').style.opacity = '1', 50);
+        }
+
+        function fecharModal() {
+            document.getElementById('fnc-modal').style.opacity = '0';
+            setTimeout(() => document.getElementById('fnc-modal').style.display = 'none', 300);
+        }
+
+        function fecharModalVisualizacao() {
+            document.getElementById('view-modal').style.opacity = '0';
+            setTimeout(() => document.getElementById('view-modal').style.display = 'none', 300);
+        }
+
+        async function salvarFnc(e) {
+            e.preventDefault();
+            // Implementar lógica de salvamento
+            toast.show('Sucesso!', 'FNC salva com sucesso', 'success');
+            fecharModal();
+            await carregarFncs();
+        }
+
+        function editarDaVisualizacao() {
+            fecharModalVisualizacao();
+            editarFnc(currentFncId);
+        }
+
+        function filtrarFncs(e) {
+            const termo = e.target.value.toLowerCase();
+            const fncsFiltradas = allFncs.filter(fnc => 
+                fnc.numero_fnc.toLowerCase().includes(termo) ||
+                fnc.produto?.toLowerCase().includes(termo) ||
+                fnc.modelo?.toLowerCase().includes(termo)
+            );
+            preencherTabela(fncsFiltradas);
+        }
+
+        // Funções de CRUD
+        async function visualizarFnc(id) {
+            currentFncId = id;
+            // Implementar lógica de visualização
+            document.getElementById('view-modal').style.display = 'flex';
+            setTimeout(() => document.getElementById('view-modal').style.opacity = '1', 50);
+        }
+
+        async function editarFnc(id) {
+            currentFncId = id;
+            isEditing = true;
+            // Implementar lógica de edição
+            document.getElementById('modal-title').textContent = 'Editar Ficha de Não Conformidade';
+            document.getElementById('fnc-modal').style.display = 'flex';
+            setTimeout(() => document.getElementById('fnc-modal').style.opacity = '1', 50);
+        }
+
+        async function excluirFnc(id) {
+            if (confirm('Tem certeza que deseja excluir esta FNC?')) {
+                try {
+                    // Implementar lógica de exclusão
+                    toast.show('Sucesso!', 'FNC excluída com sucesso', 'success');
+                    await carregarFncs();
+                } catch (error) {
+                    console.error('Erro ao excluir FNC:', error);
+                    toast.show('Erro!', 'Não foi possível excluir a FNC', 'error');
+                }
+            }
+        }
+    </script>
+</body>
+</html>

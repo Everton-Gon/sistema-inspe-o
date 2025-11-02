@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - MALLORY</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #dadce4 0%, #f4eff8 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 16px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            width: 100%;
+            max-width: 450px;
+            overflow: hidden;
+        }
+
+        .login-header {
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .logo-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .login-header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .login-header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .login-body {
+            padding: 2rem;
+        }
+
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            font-size: 1rem;
+            transition: all 0.3s;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #fda619;
+            box-shadow: 0 0 0 3px rgba(253, 166, 25, 0.1);
+        }
+
+        .pin-input-group {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+        }
+
+        .pin-digit {
+            width: 60px;
+            height: 60px;
+            text-align: center;
+            font-size: 1.5rem;
+            font-weight: 700;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            transition: all 0.3s;
+        }
+
+        .pin-digit:focus {
+            outline: none;
+            border-color: #fda619;
+            box-shadow: 0 0 0 3px rgba(253, 166, 25, 0.1);
+        }
+
+        .btn {
+            width: 100%;
+            padding: 0.875rem;
+            border: none;
+            border-radius: 8px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #faa72b 0%, #fbbb40 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(253, 166, 25, 0.3);
+        }
+
+        .btn-primary:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .btn-secondary {
+            background: #f8f9fa;
+            color: #fda619;
+            border: 2px solid #e0e0e0;
+        }
+
+        .btn-secondary:hover {
+            background: #e9ecef;
+        }
+
+        .divider {
+            text-align: center;
+            margin: 1.5rem 0;
+            position: relative;
+        }
+
+        .divider::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 50%;
+            width: 100%;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            background: white;
+            padding: 0 1rem;
+            position: relative;
+            color: #7f8c8d;
+            font-size: 0.9rem;
+        }
+
+        .alert {
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .alert-success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .alert-error {
+            background: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
+        .alert-info {
+            background: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .role-select {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .role-option {
+            flex: 1;
+            padding: 1rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .role-option:hover {
+            border-color: #fda619;
+        }
+
+        .role-option.selected {
+            border-color: #fda619;
+            background: #fff8f0;
+        }
+
+        .role-option i {
+            font-size: 2rem;
+            color: #fda619;
+            margin-bottom: 0.5rem;
+        }
+
+        .role-option span {
+            display: block;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        @media (max-width: 480px) {
+            .pin-digit {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 768px) {
+            body {
+                padding: 0.5rem;
+            }
+
+            .login-container {
+                max-width: 100%;
+            }
+
+            .login-header {
+                padding: 1.5rem;
+            }
+
+            .logo-icon {
+                font-size: 2.5rem;
+            }
+
+            .login-header h1 {
+                font-size: 1.75rem;
+            }
+
+            .login-body {
+                padding: 1.5rem;
+            }
+
+            .pin-input-group {
+                gap: 0.5rem;
+            }
+
+            .pin-digit {
+                width: 50px;
+                height: 50px;
+                font-size: 1.25rem;
+            }
+
+            .role-select {
+                flex-direction: column;
+                gap: 0.75rem;
+            }
+
+            .role-option {
+                width: 100%;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .login-header {
+                padding: 1rem;
+            }
+
+            .logo-icon {
+                font-size: 2rem;
+            }
+
+            .login-header h1 {
+                font-size: 1.5rem;
+            }
+
+            .login-header p {
+                font-size: 0.85rem;
+            }
+
+            .login-body {
+                padding: 1rem;
+            }
+
+            .pin-digit {
+                width: 45px;
+                height: 45px;
+                font-size: 1.1rem;
+            }
+
+            .btn {
+                padding: 0.75rem;
+                font-size: 0.9rem;
+            }
+
+            .form-label {
+                font-size: 0.9rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <div class="logo-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <h1>MALLORY</h1>
+            <p>Sistema de Inspeção de Qualidade</p>
+        </div>
+
+        <div class="login-body">
+            <!-- Tela de Login -->
+            <div id="login-form" class="form-container">
+                <h2 style="margin-bottom: 1.5rem; color: #2c3e50; text-align: center;">
+                    <i class="fas fa-sign-in-alt"></i> Entrar
+                </h2>
+
+                <div id="login-alert" class="hidden"></div>
+
+                <form id="loginForm">
+                    <div class="form-group">
+                        <label class="form-label" for="login-usuario">Usuário</label>
+                        <input type="text" id="login-usuario" class="form-control" placeholder="Digite seu usuário"
+                            required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">PIN de 4 Dígitos</label>
+                        <div class="pin-input-group">
+                            <input type="password" maxlength="1" class="pin-digit login-pin" data-index="0"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                            <input type="password" maxlength="1" class="pin-digit login-pin" data-index="1"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                            <input type="password" maxlength="1" class="pin-digit login-pin" data-index="2"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                            <input type="password" maxlength="1" class="pin-digit login-pin" data-index="3"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="btn-login">
+                        <i class="fas fa-sign-in-alt"></i>
+                        Entrar
+                    </button>
+                </form>
+
+                <div class="divider">
+                    <span>ou</span>
+                </div>
+
+                <button class="btn btn-secondary" id="show-register">
+                    <i class="fas fa-user-plus"></i>
+                    Criar Nova Conta
+                </button>
+            </div>
+
+            <!-- Tela de Cadastro -->
+            <div id="register-form" class="form-container hidden">
+                <h2 style="margin-bottom: 1.5rem; color: #2c3e50; text-align: center;">
+                    <i class="fas fa-user-plus"></i> Criar Conta
+                </h2>
+
+                <div id="register-alert" class="hidden"></div>
+
+                <!-- Verificação Admin -->
+                <div id="admin-verification" class="hidden">
+                    <div class="alert alert-info">
+                        <i class="fas fa-info-circle"></i>
+                        Apenas administradores podem criar novas contas. Insira o PIN do administrador.
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">PIN do Administrador</label>
+                        <div class="pin-input-group">
+                            <input type="password" maxlength="1" class="pin-digit admin-pin" data-index="0"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                            <input type="password" maxlength="1" class="pin-digit admin-pin" data-index="1"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                            <input type="password" maxlength="1" class="pin-digit admin-pin" data-index="2"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                            <input type="password" maxlength="1" class="pin-digit admin-pin" data-index="3"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="off">
+                        </div>
+                    </div>
+
+                    <button class="btn btn-primary" id="verify-admin">
+                        <i class="fas fa-check"></i>
+                        Verificar
+                    </button>
+
+                    <button class="btn btn-secondary" id="cancel-register" style="margin-top: 1rem;">
+                        <i class="fas fa-times"></i>
+                        Cancelar
+                    </button>
+                </div>
+
+                <!-- Formulário de Cadastro -->
+                <form id="registerForm" class="hidden">
+                    <div class="form-group">
+                        <label class="form-label">Perfil do Usuário</label>
+                        <div class="role-select">
+                            <div class="role-option selected" data-role="inspetor">
+                                <i class="fas fa-clipboard-check"></i>
+                                <span>Inspetor</span>
+                            </div>
+                            <div class="role-option" data-role="consultor">
+                                <i class="fas fa-user-shield"></i>
+                                <span>Consultor</span>
+                            </div>
+                        </div>
+                        <input type="hidden" id="register-role" value="inspetor">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="register-nome">Nome Completo</label>
+                        <input type="text" id="register-nome" class="form-control" placeholder="Digite o nome completo"
+                            required>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label" for="register-usuario">Usuário</label>
+                        <input type="text" id="register-usuario" class="form-control" placeholder="Digite o usuário"
+                            required autocomplete="username">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">PIN de 4 Dígitos</label>
+                        <div class="pin-input-group">
+                            <input type="password" maxlength="1" class="pin-digit register-pin" data-index="0"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                            <input type="password" maxlength="1" class="pin-digit register-pin" data-index="1"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                            <input type="password" maxlength="1" class="pin-digit register-pin" data-index="2"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                            <input type="password" maxlength="1" class="pin-digit register-pin" data-index="3"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label class="form-label">Confirmar PIN</label>
+                        <div class="pin-input-group">
+                            <input type="password" maxlength="1" class="pin-digit confirm-pin" data-index="0"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                            <input type="password" maxlength="1" class="pin-digit confirm-pin" data-index="1"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                            <input type="password" maxlength="1" class="pin-digit confirm-pin" data-index="2"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                            <input type="password" maxlength="1" class="pin-digit confirm-pin" data-index="3"
+                                inputmode="numeric" pattern="[0-9]" autocomplete="new-password">
+                        </div>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="btn-register">
+                        <i class="fas fa-user-plus"></i>
+                        Criar Conta
+                    </button>
+
+                    <button type="button" class="btn btn-secondary" id="back-to-login" style="margin-top: 1rem;">
+                        <i class="fas fa-arrow-left"></i>
+                        Voltar para Login
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:5000/api';
+
+        // Toast System
+        class Toast {
+            static show(message, type = 'success', target = 'login') {
+                const alertDiv = document.getElementById(`${target}-alert`);
+                if (!alertDiv) return;
+
+                alertDiv.className = `alert alert-${type}`;
+                alertDiv.innerHTML = `
+                    <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'times-circle' : 'info-circle'}"></i>
+                    ${message}
+                `;
+                alertDiv.classList.remove('hidden');
+
+                setTimeout(() => {
+                    alertDiv.classList.add('hidden');
+                }, 5000);
+            }
+        }
+
+        // PIN Input Handler
+        function setupPinInputs(selector) {
+            const inputs = document.querySelectorAll(selector);
+
+            inputs.forEach((input, index) => {
+                input.addEventListener('input', (e) => {
+                    // Permitir apenas números
+                    e.target.value = e.target.value.replace(/[^0-9]/g, '');
+
+                    if (e.target.value.length === 1 && index < inputs.length - 1) {
+                        inputs[index + 1].focus();
+                    }
+                });
+
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && !e.target.value && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+
+                input.addEventListener('paste', (e) => {
+                    e.preventDefault();
+                    const pastedData = e.clipboardData.getData('text').slice(0, 4);
+                    pastedData.split('').forEach((char, i) => {
+                        if (inputs[i] && /^\d$/.test(char)) {
+                            inputs[i].value = char;
+                        }
+                    });
+                    if (pastedData.length === 4) {
+                        inputs[3].focus();
+                    }
+                });
+            });
+        }
+
+        function getPinValue(selector) {
+            const inputs = document.querySelectorAll(selector);
+            return Array.from(inputs).map(input => input.value).join('');
+        }
+
+        function clearPinInputs(selector) {
+            document.querySelectorAll(selector).forEach(input => input.value = '');
+            const firstInput = document.querySelector(selector);
+            if (firstInput) firstInput.focus();
+        }
+
+        // Setup all PIN inputs
+        setupPinInputs('.login-pin');
+        setupPinInputs('.admin-pin');
+        setupPinInputs('.register-pin');
+        setupPinInputs('.confirm-pin');
+
+        // Navigation
+        document.getElementById('show-register').addEventListener('click', () => {
+            document.getElementById('login-form').classList.add('hidden');
+            document.getElementById('register-form').classList.remove('hidden');
+            document.getElementById('admin-verification').classList.remove('hidden');
+            document.getElementById('registerForm').classList.add('hidden');
+            clearPinInputs('.admin-pin');
+        });
+
+        document.getElementById('back-to-login').addEventListener('click', () => {
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+            clearPinInputs('.admin-pin');
+            clearPinInputs('.register-pin');
+            clearPinInputs('.confirm-pin');
+        });
+
+        document.getElementById('cancel-register').addEventListener('click', () => {
+            document.getElementById('register-form').classList.add('hidden');
+            document.getElementById('login-form').classList.remove('hidden');
+            clearPinInputs('.admin-pin');
+        });
+
+        // Role Selection
+        document.querySelectorAll('.role-option').forEach(option => {
+            option.addEventListener('click', function () {
+                document.querySelectorAll('.role-option').forEach(opt => opt.classList.remove('selected'));
+                this.classList.add('selected');
+                document.getElementById('register-role').value = this.dataset.role;
+            });
+        });
+
+        // Admin Verification
+        document.getElementById('verify-admin').addEventListener('click', async () => {
+            const adminPin = getPinValue('.admin-pin');
+
+            if (adminPin.length !== 4) {
+                Toast.show('Digite o PIN completo do administrador', 'error', 'register');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/auth/verify-admin`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ pin: adminPin })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    document.getElementById('admin-verification').classList.add('hidden');
+                    document.getElementById('registerForm').classList.remove('hidden');
+                    Toast.show('Verificação concluída. Preencha os dados do novo usuário', 'success', 'register');
+                } else {
+                    Toast.show('PIN de administrador inválido', 'error', 'register');
+                    clearPinInputs('.admin-pin');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                Toast.show('Erro ao verificar administrador', 'error', 'register');
+            }
+        });
+
+        // Login Form
+        document.getElementById('loginForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const usuario = document.getElementById('login-usuario').value.trim();
+            const pin = getPinValue('.login-pin');
+
+            if (!usuario) {
+                Toast.show('Digite o usuário', 'error', 'login');
+                return;
+            }
+
+            if (pin.length !== 4) {
+                Toast.show('Digite o PIN completo', 'error', 'login');
+                return;
+            }
+
+            const btnLogin = document.getElementById('btn-login');
+            btnLogin.disabled = true;
+            btnLogin.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Entrando...';
+
+            try {
+                console.log('Fazendo login...', { usuario, pin });
+
+                const response = await fetch(`${API_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ usuario, pin })
+                });
+
+                const result = await response.json();
+                console.log('Resposta do login:', result);
+
+                if (result.success) {
+                    // Salvar dados do usuário no sessionStorage
+                    sessionStorage.setItem('currentUser', JSON.stringify(result.data.usuario));
+                    sessionStorage.setItem('token', result.data.token);
+
+                    Toast.show('Login realizado com sucesso!', 'success', 'login');
+
+                    // Redirecionar baseado no perfil
+                    setTimeout(() => {
+                        const userRole = result.data.usuario.role;
+                        if (userRole === 'consultor') {
+                            window.location.href = 'consultor.html'; // Página específica para consultores
+                        } else {
+                            window.location.href = 'dashboard.html'; // Dashboard padrão para outros perfis
+                        }
+                    }, 1000);
+                } else {
+                    Toast.show(result.message || 'Usuário ou PIN inválido', 'error', 'login');
+                    clearPinInputs('.login-pin');
+                    btnLogin.disabled = false;
+                    btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                Toast.show('Erro ao fazer login. Verifique se o servidor está rodando.', 'error', 'login');
+                btnLogin.disabled = false;
+                btnLogin.innerHTML = '<i class="fas fa-sign-in-alt"></i> Entrar';
+            }
+        });
+
+        // Register Form
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const nome = document.getElementById('register-nome').value.trim();
+            const usuario = document.getElementById('register-usuario').value.trim();
+            const role = document.getElementById('register-role').value;
+            const pin = getPinValue('.register-pin');
+            const confirmPin = getPinValue('.confirm-pin');
+
+            if (!nome || !usuario) {
+                Toast.show('Preencha todos os campos', 'error', 'register');
+                return;
+            }
+
+            if (pin.length !== 4) {
+                Toast.show('Digite o PIN completo', 'error', 'register');
+                return;
+            }
+
+            if (pin !== confirmPin) {
+                Toast.show('Os PINs não coincidem', 'error', 'register');
+                clearPinInputs('.confirm-pin');
+                return;
+            }
+
+            const btnRegister = document.getElementById('btn-register');
+            btnRegister.disabled = true;
+            btnRegister.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Criando...';
+
+            try {
+                console.log('Criando usuário...', { nome, usuario, role, pin });
+
+                const response = await fetch(`${API_URL}/auth/register`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ nome, usuario, pin, role })
+                });
+
+                const result = await response.json();
+                console.log('Resposta do registro:', result);
+
+                if (result.success) {
+                    Toast.show('Conta criada com sucesso!', 'success', 'register');
+
+                    setTimeout(() => {
+                        document.getElementById('register-form').classList.add('hidden');
+                        document.getElementById('login-form').classList.remove('hidden');
+                        document.getElementById('registerForm').reset();
+                        clearPinInputs('.admin-pin');
+                        clearPinInputs('.register-pin');
+                        clearPinInputs('.confirm-pin');
+                        btnRegister.disabled = false;
+                        btnRegister.innerHTML = '<i class="fas fa-user-plus"></i> Criar Conta';
+
+                        // Preencher usuário no login
+                        document.getElementById('login-usuario').value = usuario;
+                        Toast.show('Agora faça login com suas credenciais', 'info', 'login');
+                    }, 2000);
+                } else {
+                    Toast.show(result.message || 'Erro ao criar conta', 'error', 'register');
+                    btnRegister.disabled = false;
+                    btnRegister.innerHTML = '<i class="fas fa-user-plus"></i> Criar Conta';
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                Toast.show('Erro ao criar conta. Verifique se o servidor está rodando.', 'error', 'register');
+                btnRegister.disabled = false;
+                btnRegister.innerHTML = '<i class="fas fa-user-plus"></i> Criar Conta';
+            }
+        });
+
+        // Se já estiver autenticado, redirecionar
+        if (sessionStorage.getItem('currentUser')) {
+            window.location.href = 'dashboard.html';
+        }
+    </script>
+</body>
+
+</html>

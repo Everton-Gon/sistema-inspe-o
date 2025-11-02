@@ -1,0 +1,1868 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cartões de Qualidade - Sistema Mallory</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            white-space: nowrap;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        /* ===== BOTÃO DE LOGOUT ===== */
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            margin-left: 0.75rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title p {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .header-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1rem;
+            flex-wrap: wrap;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 300px;
+            max-width: 100%;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #faa72b 0%, #fbbb40 100%);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        .card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .table-container {
+            overflow-x: auto;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 800px;
+        }
+
+        .table thead {
+            background: #f8f9fa;
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #d4edda !important;
+            color: #155724 !important;
+        }
+
+        .badge-danger {
+            background: #f8d7da !important;
+            color: #721c24 !important;
+        }
+
+        .badge-outline {
+            background: #e9ecef;
+            color: #495057;
+        }
+
+        .badge-info {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .table-actions {
+            display: flex;
+            gap: 0.5rem;
+            justify-content: flex-end;
+        }
+
+        .action-btn {
+            padding: 0.5rem;
+            border: none;
+            background: none;
+            cursor: pointer;
+            color: #6c757d;
+            transition: all 0.3s;
+            border-radius: 6px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .action-btn:hover {
+            background: #f8f9fa;
+            transform: scale(1.1);
+        }
+
+        .view-btn:hover {
+            color: #3498db;
+        }
+
+        .edit-btn:hover {
+            color: #f39c12;
+        }
+
+        .delete-btn:hover {
+            color: #e74c3c;
+        }
+
+        .text-right {
+            text-align: right;
+        }
+
+        /* Modal Styles */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s;
+            padding: 1rem;
+        }
+
+        .modal {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        }
+
+        .modal-header {
+            padding: 1.5rem 2rem;
+            border-bottom: 1px solid #dee2e6;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+        }
+
+        .modal-title {
+            font-size: 1.5rem;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: white;
+            opacity: 0.8;
+            transition: opacity 0.3s;
+        }
+
+        .close-btn:hover {
+            opacity: 1;
+        }
+
+        .modal-body {
+            padding: 2rem;
+        }
+
+        .form-section {
+            margin-bottom: 2rem;
+        }
+
+        .section-title {
+            font-size: 1.2rem;
+            margin-bottom: 1rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .form-label {
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #495057;
+        }
+
+        .form-label.required::after {
+            content: " *";
+            color: #e74c3c;
+        }
+
+        .form-control {
+            padding: 0.75rem;
+            border: 1px solid #ced4da;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            width: 100%;
+            transition: border-color 0.3s;
+            text-transform: uppercase;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        textarea.form-control {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        .info-text {
+            font-size: 0.85rem;
+            color: #6c757d;
+            margin-top: 0.25rem;
+        }
+
+        .divider {
+            height: 1px;
+            background: #dee2e6;
+            margin: 2rem 0;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+            flex-wrap: wrap;
+        }
+
+        .btn-modal {
+            padding: 0.75rem 1.5rem;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 500;
+            transition: all 0.3s;
+        }
+
+        .btn-modal-outline {
+            background: white;
+            border: 1px solid #dee2e6;
+            color: #495057;
+        }
+
+        .btn-modal-outline:hover {
+            background: #f8f9fa;
+        }
+
+        .btn-modal-primary {
+            background: linear-gradient(135deg, #faa72b 0%, #fbbb40 100%);
+            color: white;
+        }
+
+        .btn-modal-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+        }
+
+        /* Print Modal */
+        .print-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            z-index: 2000;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+        }
+
+        .print-container {
+            background: white;
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-header {
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+            padding: 2rem;
+            text-align: center;
+        }
+
+        .card-header h1 {
+            font-size: 1.8rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-header h2 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .card-body {
+            padding: 2rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+            gap: 0.25rem;
+        }
+
+        .info-label {
+            font-size: 0.9rem;
+            color: #6c757d;
+            font-weight: 500;
+        }
+
+        .info-value {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 600;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-weight: bold;
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .status-badge.badge-success {
+            background: #d4edda !important;
+            color: #155724 !important;
+        }
+
+        .status-badge.badge-danger {
+            background: #f8d7da !important;
+            color: #721c24 !important;
+        }
+
+        .section {
+            margin-bottom: 1.5rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .section-title {
+            font-weight: 600;
+            color: #495057;
+            margin-bottom: 0.5rem;
+        }
+
+        .section-content {
+            font-size: 1.1rem;
+            color: #2c3e50;
+            font-weight: 600;
+            padding: 0.5rem 0;
+        }
+
+        .sticker-area {
+            border: 2px dashed #dee2e6;
+            padding: 3rem;
+            text-align: center;
+            margin: 2rem 0;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .sticker-text {
+            font-size: 1.2rem;
+            font-weight: bold;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+
+        .sticker-subtext {
+            color: #adb5bd;
+        }
+
+        .footer {
+            margin-top: 2rem;
+            padding-top: 1.5rem;
+            border-top: 1px solid #dee2e6;
+        }
+
+        .emission-date {
+            color: #6c757d;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+        }
+
+        /* Estilo específico para o código SAP */
+        #print-code {
+            font-weight: bold;
+            color: #2c3e50;
+        }
+
+        /* Estilo específico para o documento de reprovação */
+        #print-doc {
+            font-weight: bold;
+            color: #721c24;
+            /* Cor vermelha para chamar atenção */
+        }
+
+        @media print {
+            .action-buttons {
+                display: none !important;
+            }
+
+            .print-container {
+                max-height: none;
+            }
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 1024px) {
+            .main-content {
+                padding: 1.5rem;
+            }
+
+            .form-grid {
+                grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .logo-text h2 {
+                font-size: 1.2rem;
+            }
+
+            .logo-text p {
+                font-size: 0.75rem;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .header-actions {
+                width: 100%;
+            }
+
+            .form-control {
+                width: 100%;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .table {
+                font-size: 0.85rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .modal {
+                width: 95%;
+                max-height: 95vh;
+            }
+
+            .modal-header {
+                padding: 1rem;
+            }
+
+            .modal-title {
+                font-size: 1.2rem;
+            }
+
+            .modal-body {
+                padding: 1rem;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .action-buttons {
+                flex-direction: column;
+            }
+
+            .btn-modal {
+                width: 100%;
+            }
+
+            .user-details {
+                display: none;
+            }
+
+            .print-container {
+                width: 100%;
+                padding: 1rem;
+            }
+
+            .card-header {
+                padding: 1rem;
+            }
+
+            .card-header h1 {
+                font-size: 1.3rem;
+            }
+
+            .card-header h2 {
+                font-size: 1.8rem;
+            }
+
+            .info-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-icon {
+                font-size: 1.5rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.25rem;
+            }
+
+            .page-title p {
+                font-size: 0.9rem;
+            }
+
+            .table {
+                font-size: 0.75rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+
+            .action-btn {
+                width: 28px;
+                height: 28px;
+            }
+
+            .card-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .info-label {
+                font-size: 0.8rem;
+            }
+
+            .info-value {
+                font-size: 0.95rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <div class="logo-text">
+                <h2>MALLORY</h2>
+                <p>Sistema de Inspeção</p>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="registros.html" class="nav-link" id="nav-registros">
+                <i class="fas fa-list-check"></i>
+                <span>Registros</span>
+            </a>
+            <a href="cartoes.html" class="nav-link" id="nav-cartoes">
+                <i class="fas fa-credit-card"></i>
+                <span>Cartões</span>
+            </a>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar">U</div>
+            <div class="user-details">
+                <p class="user-name">Usuário</p>
+                <p class="user-role">Inspetor de Qualidade</p>
+            </div>
+            <button class="logout-btn" id="logout-btn" title="Sair do sistema">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h1><i class="fas fa-credit-card"></i> Cartões de Qualidade</h1>
+                <p>Crie, visualize e imprima cartões de qualidade</p>
+            </div>
+            <div class="header-actions">
+                <input type="text" id="search-input" placeholder="Buscar por nome ou descrição..." class="form-control">
+                <button class="btn btn-primary" id="new-card-btn">
+                    <i class="fas fa-plus"></i>
+                    Novo Cartão
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Nome</th>
+                            <th>Origem</th>
+                            <th>Setor</th>
+                            <th>Turno</th>
+                            <th>Status</th>
+                            <th>Data</th>
+                            <th class="text-right">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cards-table-body">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem; color: #6c757d;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i>
+                                <p style="margin-top: 1rem;">Carregando cartões...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Visualização/Edição -->
+    <div class="modal-overlay" id="card-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Editar Cartão de Qualidade</h2>
+                <button class="close-btn" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="card-form">
+                    <div class="form-section">
+                        <h3 class="section-title">Informações Básicas</h3>
+                        <div class="form-grid">
+                            <!-- 🔥Nome → Código -->
+                            <div class="form-group">
+                                <label for="card-code" class="form-label required">Código do Produto (SAP)</label>
+                                <input type="text" id="card-code" class="form-control"
+                                    oninput="this.value = this.value.toUpperCase()" placeholder="Digite o código SAP"
+                                    required>
+                                <p class="info-text">O sistema buscará automaticamente os dados do produto</p>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-origin" class="form-label required">Origem</label>
+                                <select id="card-origin" class="form-control" required>
+                                    <option value="">Selecione a origem</option>
+                                    <option value="Nacional">Nacional</option>
+                                    <option value="Importado">Importado</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="card-sector" class="form-label required">Setor</label>
+                                <select id="card-sector" class="form-control" required>
+                                    <option value="">Selecione o setor</option>
+                                    <option value="Almoxarifado">Almoxarifado</option>
+                                    <option value="Montagem">Montagem</option>
+                                    <option value="Logística">Logística</option>
+                                    <option value="Injeção">Injeção</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-shift" class="form-label required">Turno</label>
+                                <select id="card-shift" class="form-control" required>
+                                    <option value="">Selecione o turno</option>
+                                    <option value="A">A</option>
+                                    <option value="B">B</option>
+                                    <option value="C">C</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-section">
+                        <h3 class="section-title">Controle de Qualidade</h3>
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="card-conform" class="form-label required">Quantidade Conforme</label>
+                                <input type="number" id="card-conform" class="form-control" min="0" placeholder="0"
+                                    required>
+                            </div>
+                            <div class="form-group">
+                                <label for="card-nonconform" class="form-label required">Quantidade Não Conforme</label>
+                                <input type="number" id="card-nonconform" class="form-control"  min="0" placeholder="0"
+                                    required>
+                            </div>
+                        </div>
+
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="card-status" class="form-label required">Status</label>
+                                <select id="card-status" class="form-control" required>
+                                    <option value="">Selecione o status</option>
+                                    <option value="Aprovado">Aprovado</option>
+                                    <option value="Reprovado">Reprovado</option>
+                                </select>
+                            </div>
+
+                            <!-- 🔥 NOVO: Campo Inspetor -->
+                            <div class="form-group">
+                                <label for="card-inspector" class="form-label">Inspetor</label>
+                                <input type="text" id="card-inspector" class="form-control" readonly
+                                    style="background-color: #e9ecef; cursor: not-allowed;">
+                                <p class="info-text">Preenchido automaticamente com seu usuário</p>
+                            </div>
+                        </div>
+
+                        <!-- 🔥 SÓ APARECE SE REPROVADO -->
+                        <div class="form-group" id="doc-reprovacao-group" style="display: none;">
+                            <label for="card-doc" class="form-label required">Documento de Reprovação</label>
+                            <input type="text" id="card-doc" class="form-control" oninput="this.value = this.value.toUpperCase()"
+                                placeholder="Nº do documento (obrigatório para reprovados)">
+                            <p class="info-text">Obrigatório para itens reprovados</p>
+                        </div>
+                    </div>
+
+                    <div class="divider"></div>
+
+                    <div class="form-section">
+                        <div class="form-group">
+                            <label for="card-description" class="form-label">Descrição (Nome do Produto)</label>
+                            <textarea id="card-description" class="form-control" readonly
+                                style="background-color: #e9ecef; cursor: not-allowed;" oninput="this.value = this.value.toUpperCase()"
+                                placeholder="Será preenchido automaticamente ao digitar o código"></textarea>
+                            <p class="info-text">Preenchido automaticamente com base no código SAP</p>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="card-notes" class="form-label">Observações</label>
+                            <textarea id="card-notes" class="form-control" oninput="this.value = this.value.toUpperCase()"
+                                placeholder="Observações adicionais"></textarea>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-modal btn-modal-outline"
+                            id="modal-cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-modal btn-modal-primary" id="modal-save-btn">Salvar
+                            Alterações</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização para Impressão -->
+    <div class="print-modal" id="print-modal">
+        <div class="print-container">
+            <div class="card-header">
+                <h1 id="print-card-title">Cartão de Qualidade</h1>
+                <h2>MALLORY</h2>
+                <p><strong>CARTÃO DE QUALIDADE</strong></p>
+            </div>
+
+            <div class="card-body">
+                <div class="info-grid">
+                    <div class="info-item">
+                        <div class="info-label">Código SAP:</div>
+                        <div class="info-value" id="print-code">N/A</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Nome do Produto:</div>
+                        <div class="info-value" id="print-name">-</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Origem:</div>
+                        <div class="info-value" id="print-origin"><strong>-</strong></div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Status:</div>
+                        <div class="info-value"><span class="status-badge" id="print-status">-</span></div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Setor:</div>
+                        <div class="info-value" id="print-sector">-</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Qtd. Conforme:</div>
+                        <div class="info-value" id="print-conform">-</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Turno:</div>
+                        <div class="info-value" id="print-shift">-</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Qtd. Não Conforme:</div>
+                        <div class="info-value" id="print-nonconform">-</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Data:</div>
+                        <div class="info-value" id="print-date">-</div>
+                    </div>
+
+                    <div class="info-item">
+                        <div class="info-label">Responsável:</div>
+                        <div class="info-value" id="print-responsible">-</div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Documento de Reprovação:</div>
+                    <div class="section-content" id="print-doc">N/A</div>
+                </div>
+
+                <div class="section">
+                    <div class="section-title">Observações:</div>
+                    <div class="section-content" id="print-notes">-</div>
+                </div>
+
+                <div class="sticker-area">
+                    <div class="sticker-text">ÁREA PARA ADESIVO</div>
+                    <div class="sticker-subtext">COLAR ADESIVO AQUI</div>
+                </div>
+
+                <div class="footer">
+                    <div class="emission-date" id="print-emission">Data de emissão: -</div>
+
+                    <div class="action-buttons">
+                        <button class="btn-modal btn-modal-outline" id="close-print-btn">
+                            <i class="fas fa-times"></i> Fechar
+                        </button>
+                        <button class="btn-modal btn-modal-primary" id="print-btn">
+                            <i class="fas fa-print"></i> Imprimir Cartão
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração da API
+        const API_URL = 'http://localhost:5000/api/cartoes';
+
+        // Estado da aplicação
+        let isEditing = false;
+        let currentCardId = null;
+        let allCards = [];
+
+        // Toast Notification System
+        class Toast {
+            constructor() {
+                this.createToastContainer();
+            }
+
+            createToastContainer() {
+                if (!document.getElementById('toast-container')) {
+                    const container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                    `;
+                    document.body.appendChild(container);
+                }
+            }
+
+            show(title, message, type = 'success', duration = 3000) {
+                const toast = document.createElement('div');
+                toast.className = `toast toast-${type}`;
+                toast.style.cssText = `
+                    margin-bottom: 10px;
+                    padding: 15px 20px;
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    animation: slideIn 0.3s ease;
+                    min-width: 300px;
+                    max-width: 500px;
+                    border-left: 4px solid ${this.getColor(type)};
+                `;
+
+                const icon = this.getIcon(type);
+                toast.innerHTML = `
+                    <div style="flex-shrink: 0; color: ${this.getColor(type)}">${icon}</div>
+                    <div style="flex-grow: 1">
+                        <div style="font-weight: 600; margin-bottom: 4px">${title}</div>
+                        <div style="color: #666; font-size: 0.9em">${message}</div>
+                    </div>
+                    <button class="toast-close" style="background: none; border: none; cursor: pointer; color: #999">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                const container = document.getElementById('toast-container');
+                container.appendChild(toast);
+
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    this.closeToast(toast);
+                });
+
+                setTimeout(() => {
+                    this.closeToast(toast);
+                }, duration);
+            }
+
+            closeToast(toast) {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }
+
+            getIcon(type) {
+                const icons = {
+                    success: '<i class="fas fa-check-circle"></i>',
+                    error: '<i class="fas fa-times-circle"></i>',
+                    warning: '<i class="fas fa-exclamation-circle"></i>',
+                    info: '<i class="fas fa-info-circle"></i>'
+                };
+                return icons[type] || icons.info;
+            }
+
+            getColor(type) {
+                const colors = {
+                    success: '#2ecc71',
+                    error: '#e74c3c',
+                    warning: '#f1c40f',
+                    info: '#3498db'
+                };
+                return colors[type] || colors.info;
+            }
+        }
+
+
+
+        // Adicionar estilos de animação
+        const style = document.createElement('style');
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+            @keyframes slideOut {
+                from { transform: translateX(0); opacity: 1; }
+                to { transform: translateX(100%); opacity: 0; }
+            }
+        `;
+        document.head.appendChild(style);
+
+        const toast = new Toast();
+
+
+        // 🔥 NOVA FUNÇÃO: Buscar produto por código SAP
+        async function buscarProdutoPorCodigo() {
+            const codigoSAP = document.getElementById('card-code').value.trim();
+
+            if (!codigoSAP) {
+                return;
+            }
+
+            try {
+                console.log('🔍 Buscando produto com código SAP:', codigoSAP);
+
+                const codeInput = document.getElementById('card-code');
+                const originalBorder = codeInput.style.border;
+                codeInput.style.border = '2px solid #3498db';
+                codeInput.disabled = true;
+
+                const response = await fetch(`http://localhost:5000/api/produtos/${codigoSAP}`);
+
+                codeInput.style.border = originalBorder;
+                codeInput.disabled = false;
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        console.log('⚠️ Produto não encontrado');
+                        mostrarAviso('Produto não encontrado na base de dados');
+                        // Limpar descrição se produto não encontrado
+                        document.getElementById('card-description').value = '';
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('✅ Produto encontrado:', result);
+
+                if (result.success && result.data) {
+                    const produto = result.data;
+
+                    // Preencher descrição com o nome do produto
+                    if (produto.desc_material) {
+                        document.getElementById('card-description').value = produto.desc_material;
+                        console.log('✓ Descrição preenchida:', produto.desc_material);
+                    }
+
+                    // Feedback visual de sucesso
+                    codeInput.style.border = '2px solid #2ecc71';
+                    setTimeout(() => {
+                        codeInput.style.border = originalBorder;
+                    }, 2000);
+
+                    mostrarSucesso('Dados do produto carregados!');
+                }
+
+            } catch (error) {
+                console.error('❌ Erro ao buscar produto:', error);
+
+                const codeInput = document.getElementById('card-code');
+                codeInput.disabled = false;
+                codeInput.style.border = '2px solid #e74c3c';
+                setTimeout(() => {
+                    codeInput.style.border = '';
+                }, 2000);
+
+                if (!error.message.includes('404')) {
+                    mostrarErro('Erro ao buscar dados do produto');
+                }
+            }
+        }
+
+        // 🔥 NOVA FUNÇÃO: Controlar visibilidade do documento de reprovação
+        function toggleDocumentoReprovacao() {
+            const statusSelect = document.getElementById('card-status');
+            const docGroup = document.getElementById('doc-reprovacao-group');
+            const docInput = document.getElementById('card-doc');
+
+            if (statusSelect && docGroup) {
+                const isReprovado = statusSelect.value.toLowerCase() === 'reprovado';
+                docGroup.style.display = isReprovado ? 'block' : 'none';
+
+                // Marcar campo como obrigatório se reprovado
+                if (isReprovado) {
+                    docInput.required = true;
+                } else {
+                    docInput.required = false;
+                    docInput.value = '';
+                }
+            }
+        }
+
+        // Inicialização quando o DOM estiver carregado
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Inicializando aplicação...');
+            setupEventListeners();
+            carregarCartoes();
+        });
+
+        // Configurar todos os event listeners
+        function setupEventListeners() {
+            // Botão novo cartão
+            document.getElementById('new-card-btn').addEventListener('click', abrirNovoCartao);
+
+            // Modal de edição
+            document.getElementById('modal-close-btn').addEventListener('click', fecharModal);
+            document.getElementById('modal-cancel-btn').addEventListener('click', fecharModal);
+            document.getElementById('card-form').addEventListener('submit', salvarCartao);
+
+            // Modal de impressão
+            document.getElementById('close-print-btn').addEventListener('click', fecharModalImpressao);
+            document.getElementById('print-btn').addEventListener('click', imprimirCartao);
+
+            // Fechar modal ao clicar fora
+            document.getElementById('card-modal').addEventListener('click', function (e) {
+                if (e.target === this) fecharModal();
+            });
+
+            document.getElementById('print-modal').addEventListener('click', function (e) {
+                if (e.target === this) fecharModalImpressao();
+            });
+
+            // Busca
+            document.getElementById('search-input').addEventListener('input', filtrarCartoes);
+
+            // 🔥 NOVO: Buscar produto quando código SAP é digitado
+            const cardCode = document.getElementById('card-code');
+            if (cardCode) {
+                cardCode.addEventListener('blur', buscarProdutoPorCodigo);
+                cardCode.addEventListener('keypress', function (e) {
+                    if (e.key === 'Enter') {
+                        e.preventDefault();
+                        buscarProdutoPorCodigo();
+                    }
+                });
+            }
+
+            // 🔥 NOVO: Controlar visibilidade do documento de reprovação
+            const statusSelect = document.getElementById('card-status');
+            if (statusSelect) {
+                statusSelect.addEventListener('change', toggleDocumentoReprovacao);
+            }
+        }
+        // Carregar cartões do servidor
+        async function carregarCartoes() {
+            try {
+                console.log('Carregando cartões da API...');
+                const response = await fetch(API_URL);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Resposta da API:', result);
+
+                if (result.success) {
+                    allCards = result.data || [];
+                    preencherTabela(allCards);
+                    console.log(`${allCards.length} cartões carregados com sucesso`);
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar cartões');
+                }
+            } catch (error) {
+                console.error('Erro ao carregar cartões:', error);
+                mostrarErro('Não foi possível carregar os cartões. Verifique se o servidor está rodando.');
+
+                // Mostrar mensagem na tabela
+                const tbody = document.getElementById('cards-table-body');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: #e74c3c;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i>
+                            <p style="margin-top: 1rem;">Erro ao carregar cartões. Verifique a conexão com o servidor.</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Preencher tabela com os cartões
+        function preencherTabela(cartoes) {
+            const tbody = document.getElementById('cards-table-body');
+            tbody.innerHTML = '';
+
+            if (cartoes.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 2rem; color: #6c757d;">
+                            <i class="fas fa-inbox" style="font-size: 2rem;"></i>
+                            <p style="margin-top: 1rem;">Nenhum cartão encontrado. Clique em "Novo Cartão" para criar um.</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            cartoes.forEach(cartao => {
+                const tr = document.createElement('tr');
+                const dataFormatada = formatarData(cartao.created_at);
+
+                const statusClass = cartao.status?.toLowerCase() === 'aprovado' ? 'badge-success' : 'badge-danger';
+                const statusTexto = cartao.status || 'N/A';
+
+                tr.innerHTML = `
+                    <td><strong>${cartao.nome_produto || 'N/A'}</strong></td>
+                    <td><strong>${cartao.origem || 'N/A'}</strong></td>
+                    <td><span class="badge badge-outline">${cartao.setor || 'N/A'}</span></td>
+                    <td>${cartao.turno || 'N/A'}</td>
+                    <td><span class="badge ${statusClass}">${statusTexto}</span></td>
+                    <td>${dataFormatada}</td>
+                    <td class="text-right">
+                        <div class="table-actions">
+                            <button class="action-btn view-btn" onclick="visualizarCartao(${cartao.id})" title="Visualizar">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" onclick="editarCartao(${cartao.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="excluirCartao(${cartao.id})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Formatar data
+        function formatarData(dataString) {
+            if (!dataString) return 'N/A';
+            try {
+                const data = new Date(dataString);
+                return data.toLocaleDateString('pt-BR');
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        // Abrir modal para novo cartão
+        function abrirNovoCartao() {
+            isEditing = false;
+            currentCardId = null;
+            limparFormulario();
+            document.getElementById('modal-title').textContent = 'Novo Cartão de Qualidade';
+            document.getElementById('modal-save-btn').textContent = 'Criar Cartão';
+
+            // 🔥 NOVO: Preencher inspetor com usuário logado
+            if (window.auth) {
+                const nomeInspetor = auth.getUserName();
+                document.getElementById('card-inspector').value = nomeInspetor;
+                console.log('✅ Inspetor preenchido:', nomeInspetor);
+            }
+
+            // Ocultar documento de reprovação por padrão
+            toggleDocumentoReprovacao();
+
+            abrirModal();
+        }
+
+        // Editar cartão existente
+        async function editarCartao(id) {
+            try {
+                console.log('Editando cartão:', id);
+                const response = await fetch(`${API_URL}/${id}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Dados do cartão:', result);
+
+                if (result.success) {
+                    preencherFormulario(result.data);
+                    currentCardId = id;
+                    isEditing = true;
+                    document.getElementById('modal-title').textContent = 'Editar Cartão de Qualidade';
+                    document.getElementById('modal-save-btn').textContent = 'Salvar Alterações';
+                    abrirModal();
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar cartão');
+                }
+            } catch (error) {
+                console.error('Erro ao editar cartão:', error);
+                mostrarErro('Não foi possível carregar os dados do cartão');
+            }
+        }
+
+        // Visualizar cartão para impressão
+        async function visualizarCartao(id) {
+            try {
+                console.log('Visualizando cartão:', id);
+                const response = await fetch(`${API_URL}/${id}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Dados do cartão para visualização:', result);
+
+                if (result.success) {
+                    preencherModalImpressao(result.data);
+                    abrirModalImpressao();
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar cartão');
+                }
+            } catch (error) {
+                console.error('Erro ao visualizar cartão:', error);
+                mostrarErro('Não foi possível visualizar o cartão');
+            }
+        }
+
+        // Preencher modal de impressão
+        function preencherModalImpressao(dados) {
+            console.log('📋 Preenchendo modal com dados:', dados);
+
+            // Código do Produto (SAP)
+            document.getElementById('print-code').textContent = dados.codigo_produto || 'N/A';
+
+            // Nome do Produto 
+            document.getElementById('print-name').textContent = dados.descricao || dados.nome_produto || 'N/A';
+
+            // Origem
+            document.getElementById('print-origin').textContent = dados.origem || 'Nacional';
+
+            // Status - Corrigindo as cores
+            const statusBadge = document.getElementById('print-status');
+            const isAprovado = dados.status?.toLowerCase() === 'aprovado';
+            statusBadge.textContent = dados.status?.toUpperCase() || 'N/A';
+            statusBadge.className = `status-badge ${isAprovado ? 'badge-success' : 'badge-danger'}`;
+
+            // Documento de Reprovação - Só mostrar se for reprovado
+            const docSection = document.querySelector('.section');
+            if (docSection) {
+                if (!isAprovado && dados.documento_reprovacao) {
+                    docSection.style.display = 'block';
+                    document.getElementById('print-doc').textContent = dados.documento_reprovacao;
+                } else {
+                    docSection.style.display = 'none';
+                }
+            }
+
+            // Setor
+            document.getElementById('print-sector').textContent = dados.setor || 'N/A';
+
+            // Turno
+            document.getElementById('print-shift').textContent = dados.turno || 'N/A';
+
+            // Quantidades
+            document.getElementById('print-conform').textContent = dados.qtd_conforme || '0';
+            document.getElementById('print-nonconform').textContent = dados.qtd_nao_conforme || '0';
+
+            // Responsável
+            document.getElementById('print-responsible').textContent = dados.responsavel || 'N/A';
+
+            // Data
+            document.getElementById('print-date').textContent = formatarData(dados.created_at) || 'N/A';
+
+            // Observações
+            document.getElementById('print-notes').textContent = dados.observacoes || 'Sem observações';
+
+            // Data de emissão
+            const agora = new Date();
+            const dataEmissao = agora.toLocaleDateString('pt-BR') + ' ' +
+                agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+            document.getElementById('print-emission').textContent = `Data de emissão: ${dataEmissao}`;
+        }
+        document.getElementById('print-code').innerHTML = `<strong>${dados.codigo_produto || dados.nome_produto || 'N/A'}</strong>`;
+
+        // Status
+        const statusBadge = document.getElementById('print-status');
+        const statusTexto = dados.status || 'N/A';
+        statusBadge.textContent = statusTexto.toUpperCase();
+        statusBadge.style.background = dados.status?.toLowerCase() === 'aprovado' ? '#d4edda' : '#f8d7da';
+        statusBadge.style.color = dados.status?.toLowerCase() === 'aprovado' ? '#155724' : '#721c24';
+
+        // Documento de reprovação
+        const docSection = document.getElementById('print-doc-section');
+        if (dados.documento_reprovacao) {
+            docSection.style.display = 'block';
+            document.getElementById('print-doc').innerHTML = `<strong>${dados.documento_reprovacao}</strong>`;
+        } else {
+            docSection.style.display = 'none';
+        }
+
+        // Data de emissão
+        const agora = new Date();
+        const dataEmissao = agora.toLocaleDateString('pt-BR') + ' ' + agora.toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' });
+        document.getElementById('print-emission').textContent = `Data de emissão: ${dataEmissao}`;
+
+
+        // Salvar cartão (criar ou editar)
+        async function salvarCartao(evento) {
+            evento.preventDefault();
+
+            const status = document.getElementById('card-status').value;
+            const documentoReprovacao = document.getElementById('card-doc').value.trim();
+
+            // Validar documento se reprovado
+            if (status.toLowerCase() === 'reprovado' && !documentoReprovacao) {
+                mostrarAviso('O documento de reprovação é obrigatório para itens reprovados');
+                return;
+            }
+
+            // Pegar nome do inspetor
+            const nomeInspetor = window.auth ? auth.getUserName() : 'Usuário';
+
+            // 🔥 CORRIGIDO: Pegar código E descrição separadamente
+            const codigoProduto = document.getElementById('card-code').value.trim();
+            const nomeProduto = document.getElementById('card-description').value.trim();
+
+            const dados = {
+                codigo_produto: codigoProduto,        // 🔥 Código SAP
+                nome_produto: nomeProduto || codigoProduto, // 🔥 Nome/Descrição (se vazio, usa código)
+                origem: document.getElementById('card-origin').value,
+                setor: document.getElementById('card-sector').value,
+                turno: document.getElementById('card-shift').value,
+                qtd_conforme: parseInt(document.getElementById('card-conform').value) || 0,
+                qtd_nao_conforme: parseInt(document.getElementById('card-nonconform').value) || 0,
+                status: status,
+                documento_reprovacao: status.toLowerCase() === 'reprovado' ? documentoReprovacao : null,
+                descricao: nomeProduto,  // 🔥 Descrição completa
+                observacoes: document.getElementById('card-notes').value.trim(),
+                responsavel: nomeInspetor
+            };
+
+            // Validação básica
+            if (!dados.codigo_produto || !dados.origem || !dados.setor || !dados.turno || !dados.status) {
+                mostrarAviso('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+
+            const url = isEditing ? `${API_URL}/${currentCardId}` : API_URL;
+            const method = isEditing ? 'PUT' : 'POST';
+
+            try {
+                console.log('Salvando cartão:', method, url, dados);
+
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dados)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Resposta do servidor:', result);
+
+                if (result.success) {
+                    mostrarSucesso(isEditing ? 'Cartão atualizado com sucesso!' : 'Cartão criado com sucesso!');
+                    await carregarCartoes();
+                    fecharModal();
+                } else {
+                    throw new Error(result.message || 'Erro ao salvar cartão');
+                }
+            } catch (error) {
+                console.error('Erro ao salvar cartão:', error);
+                mostrarErro(`Falha ao salvar cartão: ${error.message}`);
+            }
+        }
+
+        // Excluir cartão
+        async function excluirCartao(id) {
+            if (!confirm('Tem certeza que deseja excluir este cartão? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            try {
+                console.log('Excluindo cartão:', id);
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE'
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Resposta da exclusão:', result);
+
+                if (result.success) {
+                    mostrarSucesso('Cartão excluído com sucesso!');
+                    await carregarCartoes();
+                } else {
+                    throw new Error(result.message || 'Erro ao excluir cartão');
+                }
+            } catch (error) {
+                console.error('Erro ao excluir cartão:', error);
+                mostrarErro('Falha ao excluir cartão');
+            }
+        }
+
+        // Filtrar cartões na busca
+        function filtrarCartoes() {
+            const termoBusca = document.getElementById('search-input').value.toLowerCase();
+
+            if (termoBusca === '') {
+                preencherTabela(allCards);
+                return;
+            }
+
+            const cartoesFiltrados = allCards.filter(cartao => {
+                const nome = (cartao.nome_produto || '').toLowerCase();
+                const descricao = (cartao.descricao || '').toLowerCase();
+                const origem = (cartao.origem || '').toLowerCase();
+                const setor = (cartao.setor || '').toLowerCase();
+
+                return nome.includes(termoBusca) ||
+                    descricao.includes(termoBusca) ||
+                    origem.includes(termoBusca) ||
+                    setor.includes(termoBusca);
+            });
+
+            preencherTabela(cartoesFiltrados);
+        }
+
+        // Funções auxiliares de formulário
+        function preencherFormulario(dados) {
+            // 🔥 CORRIGIDO: Preencher código e descrição nos campos corretos
+            document.getElementById('card-code').value = dados.codigo_produto || dados.nome_produto || '';
+            document.getElementById('card-description').value = dados.descricao || dados.nome_produto || '';
+
+            document.getElementById('card-origin').value = dados.origem || '';
+            document.getElementById('card-sector').value = dados.setor || '';
+            document.getElementById('card-shift').value = dados.turno || '';
+            document.getElementById('card-conform').value = dados.qtd_conforme || 0;
+            document.getElementById('card-nonconform').value = dados.qtd_nao_conforme || 0;
+            document.getElementById('card-status').value = dados.status || '';
+            document.getElementById('card-doc').value = dados.documento_reprovacao || '';
+            document.getElementById('card-notes').value = dados.observacoes || '';
+            document.getElementById('card-inspector').value = dados.responsavel || '';
+
+            // Atualizar visibilidade do documento
+            toggleDocumentoReprovacao();
+        }
+        function limparFormulario() {
+            document.getElementById('card-form').reset();
+
+            // 🔥 Preencher inspetor novamente
+            if (window.auth) {
+                document.getElementById('card-inspector').value = auth.getUserName();
+            }
+        }
+
+        // Editar cartão existente
+        async function editarCartao(id) {
+            try {
+                console.log('Editando cartão:', id);
+                const response = await fetch(`${API_URL}/${id}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+                console.log('Dados do cartão:', result);
+
+                if (result.success) {
+                    preencherFormulario(result.data);
+                    currentCardId = id;
+                    isEditing = true;
+                    document.getElementById('modal-title').textContent = 'Editar Cartão de Qualidade';
+                    document.getElementById('modal-save-btn').textContent = 'Salvar Alterações';
+
+                    // 🔥 Atualizar visibilidade após carregar
+                    toggleDocumentoReprovacao();
+
+                    abrirModal();
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar cartão');
+                }
+            } catch (error) {
+                console.error('Erro ao editar cartão:', error);
+                mostrarErro('Não foi possível carregar os dados do cartão');
+            }
+        }
+
+        function limparFormulario() {
+            document.getElementById('card-form').reset();
+        }
+
+
+        // Funções de modal
+        function abrirModal() {
+            const modal = document.getElementById('card-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.style.opacity = 1, 10);
+
+            // 🔥 Garantir que inspetor está preenchido
+            if (window.auth && document.getElementById('card-inspector')) {
+                document.getElementById('card-inspector').value = auth.getUserName();
+            }
+        }
+
+        function fecharModal() {
+            const modal = document.getElementById('card-modal');
+            modal.style.opacity = 0;
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        function abrirModalImpressao() {
+            const modal = document.getElementById('print-modal');
+            modal.style.display = 'flex';
+        }
+
+        function fecharModalImpressao() {
+            const modal = document.getElementById('print-modal');
+            modal.style.display = 'none';
+        }
+
+        function imprimirCartao() {
+            window.print();
+        }
+
+        // Funções de notificação
+        function mostrarSucesso(mensagem) {
+            toast.show('Sucesso', mensagem, 'success');
+        }
+
+        function mostrarErro(mensagem) {
+            toast.show('Erro', mensagem, 'error');
+        }
+
+        function mostrarAviso(mensagem) {
+            toast.show('Atenção', mensagem, 'warning');
+        }
+
+        function mostrarInfo(mensagem) {
+            toast.show('Informação', mensagem, 'info');
+        }
+
+        // ========== RESPONSIVIDADE ==========
+        function ajustarResponsividade() {
+            if (window.innerWidth <= 768) {
+                // Ocultar textos do menu em mobile
+                document.querySelectorAll('.nav-link span').forEach(span => {
+                    span.style.display = 'none';
+                });
+            } else {
+                // Mostrar textos em desktop
+                document.querySelectorAll('.nav-link span').forEach(span => {
+                    span.style.display = 'inline';
+                });
+            }
+        }
+
+        // Executar ao carregar e ao redimensionar
+        window.addEventListener('load', ajustarResponsividade);
+        window.addEventListener('resize', ajustarResponsividade);
+    </script>
+    <script src="auth.js"></script>
+    <script>
+        // Marcar o link ativo
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById('nav-cartoes').classList.add('active');
+        });
+    </script>
+</body>
+
+</html>

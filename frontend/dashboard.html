@@ -1,0 +1,940 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard - MALLORY</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #fda619 0%, #fdbc35 100%);
+            color: white;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .logo-icon {
+            font-size: 2rem;
+        }
+
+        .logo-text h2 {
+            font-size: 1.5rem;
+            margin-bottom: 0.2rem;
+        }
+
+        .logo-text p {
+            font-size: 0.85rem;
+            opacity: 0.9;
+        }
+
+        .nav-menu {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .nav-link {
+            color: white;
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            transition: background 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-link:hover,
+        .nav-link.active {
+            background: rgba(255, 255, 255, 0.2);
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.3);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+
+        .user-details p {
+            font-size: 0.85rem;
+            line-height: 1.3;
+        }
+
+        /* ===== BOTÃO DE LOGOUT ===== */
+        .logout-btn {
+            background: rgba(255, 255, 255, 0.2);
+            border: none;
+            color: white;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.2rem;
+            transition: all 0.3s;
+            margin-left: 0.75rem;
+        }
+
+        .logout-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .main-content {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 2rem;
+        }
+
+        .page-title h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+        }
+
+        .page-title p {
+            color: #7f8c8d;
+            font-size: 1rem;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+        }
+
+        .stat-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+        }
+
+        .stat-icon.primary {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+        }
+
+        .stat-icon.success {
+            background: linear-gradient(135deg, #2ecc71 0%, #27ae60 100%);
+            color: white;
+        }
+
+        .stat-icon.danger {
+            background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+            color: white;
+        }
+
+        .stat-icon.warning {
+            background: linear-gradient(135deg, #f39c12 0%, #e67e22 100%);
+            color: white;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            color: #7f8c8d;
+            font-size: 0.95rem;
+            font-weight: 500;
+        }
+
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .chart-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .chart-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f5f7fa;
+        }
+
+        .chart-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .chart-container {
+            height: 300px;
+            position: relative;
+        }
+
+        .table-card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .table-header {
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 2px solid #f5f7fa;
+        }
+
+        .table-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .table thead {
+            background: #f8f9fa;
+        }
+
+        .table th {
+            padding: 1rem;
+            text-align: left;
+            font-weight: 600;
+            color: #495057;
+            border-bottom: 2px solid #dee2e6;
+        }
+
+        .table td {
+            padding: 1rem;
+            border-bottom: 1px solid #dee2e6;
+        }
+
+        .table tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        .badge {
+            padding: 0.35rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            display: inline-block;
+        }
+
+        .badge-success {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-danger {
+            background: #f8d7da;
+            color: #721c24;
+        }
+
+        .badge-warning {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 2rem;
+            color: #7f8c8d;
+        }
+
+        .loading-spinner {
+            border: 3px solid #f3f3f3;
+            border-top: 3px solid #667eea;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .btn-link {
+            background: none;
+            border: none;
+            color: #667eea;
+            text-decoration: none;
+            cursor: pointer;
+            padding: 0;
+            font-weight: 500;
+        }
+
+        .btn-link:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+
+            .stats-grid,
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* ========== RESPONSIVIDADE ========== */
+        @media (max-width: 1024px) {
+
+            .stats-grid,
+            .charts-grid {
+                grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            }
+        }
+
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+
+            .logo-text h2 {
+                font-size: 1.2rem;
+            }
+
+            .logo-text p {
+                font-size: 0.75rem;
+            }
+
+            .nav-menu {
+                width: 100%;
+                justify-content: center;
+            }
+
+            .nav-link span {
+                display: none;
+            }
+
+            .main-content {
+                padding: 1rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.5rem;
+            }
+
+            .stats-grid,
+            .charts-grid {
+                grid-template-columns: 1fr;
+                gap: 1rem;
+            }
+
+            .stat-card {
+                padding: 1rem;
+            }
+
+            .stat-value {
+                font-size: 2rem;
+            }
+
+            .chart-card {
+                padding: 1rem;
+            }
+
+            .chart-container {
+                height: 250px;
+            }
+
+            .table {
+                font-size: 0.85rem;
+            }
+
+            .table th,
+            .table td {
+                padding: 0.75rem 0.5rem;
+            }
+
+            .user-details {
+                display: none;
+            }
+        }
+
+        @media (max-width: 480px) {
+            .logo-icon {
+                font-size: 1.5rem;
+            }
+
+            .page-title h1 {
+                font-size: 1.25rem;
+            }
+
+            .page-title p {
+                font-size: 0.9rem;
+            }
+
+            .stat-value {
+                font-size: 1.75rem;
+            }
+
+            .stat-label {
+                font-size: 0.85rem;
+            }
+
+            .chart-container {
+                height: 200px;
+            }
+
+            .table {
+                font-size: 0.75rem;
+            }
+
+            .badge {
+                font-size: 0.75rem;
+                padding: 0.25rem 0.5rem;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <div class="logo-text">
+                <h2>MALLORY</h2>
+                <p>Sistema de Inspeção</p>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="registros.html" class="nav-link" id="nav-registros">
+                <i class="fas fa-list-check"></i>
+                <span>Registros</span>
+            </a>
+            <a href="cartoes.html" class="nav-link" id="nav-cartoes">
+                <i class="fas fa-credit-card"></i>
+                <span>Cartões</span>
+            </a>
+            <a href="fichas.html" class="nav-link" id="nav-cartoes">
+                <i class="fas fa-file-alt"></i>
+                <span>Fichas NC</span>
+            </a>
+
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar">U</div>
+            <div class="user-details">
+                <p class="user-name">Usuário</p>
+                <p class="user-role">Inspetor de Qualidade</p>
+            </div>
+            <button class="logout-btn" id="logout-btn" title="Sair do sistema">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h1><i class="fas fa-chart-line"></i> Dashboard de Qualidade</h1>
+                <p>Visão geral dos registros de inspeção de produtos</p>
+            </div>
+        </div>
+
+        <!-- Cards de Estatísticas -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="total-inspecoes">0</div>
+                        <div class="stat-label">Total de Inspeções</div>
+                    </div>
+                    <div class="stat-icon primary">
+                        <i class="fas fa-clipboard-check"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="taxa-aprovacao">0%</div>
+                        <div class="stat-label">Taxa de Aprovação</div>
+                    </div>
+                    <div class="stat-icon success">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="taxa-reprovacao">0%</div>
+                        <div class="stat-label">Taxa de Reprovação</div>
+                    </div>
+                    <div class="stat-icon danger">
+                        <i class="fas fa-times-circle"></i>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-header">
+                    <div>
+                        <div class="stat-value" id="inspecoes-mes">0</div>
+                        <div class="stat-label">Inspeções este Mês</div>
+                    </div>
+                    <div class="stat-icon warning">
+                        <i class="fas fa-calendar-alt"></i>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Gráficos -->
+        <div class="charts-grid">
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="fas fa-chart-pie"></i>
+                        Status das Inspeções
+                    </h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="statusChart"></canvas>
+                </div>
+            </div>
+
+            <div class="chart-card">
+                <div class="chart-header">
+                    <h3 class="chart-title">
+                        <i class="fas fa-chart-bar"></i>
+                        Inspeções por Linha
+                    </h3>
+                </div>
+                <div class="chart-container">
+                    <canvas id="linhaChart"></canvas>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tabela de Últimas Inspeções -->
+        <div class="table-card">
+            <div class="table-header">
+                <h3 class="table-title">
+                    <i class="fas fa-history"></i>
+                    Últimas Inspeções
+                </h3>
+            </div>
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Código SAP</th>
+                            <th>Modelo</th>
+                            <th>Linha</th>
+                            <th>Data</th>
+                            <th>Status</th>
+                            <th>Inspetor</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="ultimas-inspecoes">
+                        <tr>
+                            <td colspan="8">
+                                <div class="loading">
+                                    <div class="loading-spinner"></div>
+                                    <p>Carregando inspeções...</p>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // SCRIPT ATUALIZADO PARA dashboard.html
+        // Substitua todo o <script> do dashboard por este código
+
+        const API_URL = 'http://localhost:5000/api';
+        let statusChart = null;
+        let linhaChart = null;
+
+        // Carregar dados do dashboard
+        async function carregarDashboard() {
+            try {
+                const [statsResponse, registrosResponse, todosRegistrosResponse] = await Promise.all([
+                    fetch(`${API_URL}/dashboard/stats`),
+                    fetch(`${API_URL}/registros?limit=10`),
+                    fetch(`${API_URL}/registros`) // Buscar todos os registros para o gráfico
+                ]);
+
+                const statsData = await statsResponse.json();
+                const registrosData = await registrosResponse.json();
+                const todosRegistrosData = await todosRegistrosResponse.json();
+
+                if (statsData.success) {
+                    atualizarCards(statsData.data);
+                    atualizarGraficoStatus(statsData.data);
+                }
+
+                if (todosRegistrosData.success) {
+                    atualizarGraficoLinhas(todosRegistrosData.data);
+                }
+
+                if (registrosData.success) {
+                    atualizarTabelaInspecoes(registrosData.data);
+                }
+
+            } catch (error) {
+                console.error('Erro ao carregar dashboard:', error);
+            }
+        }
+
+        // Atualizar cards de estatísticas
+        function atualizarCards(data) {
+            const total = data.total_registros || 0;
+            const aprovados = data.status_distribution.find(s => s.status === 'aprovado')?.count || 0;
+            const reprovados = data.status_distribution.find(s => s.status === 'reprovado')?.count || 0;
+            const inspecoesMes = data.registros_mes || 0;
+
+            document.getElementById('total-inspecoes').textContent = total;
+            document.getElementById('taxa-aprovacao').textContent =
+                total > 0 ? ((aprovados / total) * 100).toFixed(1) + '%' : '0%';
+            document.getElementById('taxa-reprovacao').textContent =
+                total > 0 ? ((reprovados / total) * 100).toFixed(1) + '%' : '0%';
+            document.getElementById('inspecoes-mes').textContent = inspecoesMes;
+        }
+
+        // Atualizar gráfico de status
+        function atualizarGraficoStatus(data) {
+            const ctx = document.getElementById('statusChart');
+
+            const aprovados = data.status_distribution.find(s => s.status === 'aprovado')?.count || 0;
+            const pendentes = data.status_distribution.find(s => s.status === 'pendente')?.count || 0;
+            const reprovados = data.status_distribution.find(s => s.status === 'reprovado')?.count || 0;
+
+            if (statusChart) {
+                statusChart.destroy();
+            }
+
+            statusChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: ['Aprovado', 'Pendente', 'Reprovado'],
+                    datasets: [{
+                        data: [aprovados, pendentes, reprovados],
+                        backgroundColor: ['#2ecc71', '#f39c12', '#e74c3c'],
+                        borderWidth: 0
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                padding: 15,
+                                font: { size: 12 }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // Atualizar gráfico de linhas - NOVA VERSÃO
+        function atualizarGraficoLinhas(data) {
+            const ctx = document.getElementById('linhaChart');
+
+            if (linhaChart) {
+                linhaChart.destroy();
+            }
+
+            // Processar dados para contar inspeções por linha de montagem
+            const linhasCount = {};
+            data.forEach(registro => {
+                const linha = registro.linha_montagem || 'Sem Linha';
+                linhasCount[linha] = (linhasCount[linha] || 0) + 1;
+            });
+
+            // Converter para arrays para o gráfico
+            const labels = Object.keys(linhasCount).sort();
+            const values = labels.map(label => linhasCount[label]);
+
+            // Cores diferentes para cada barra
+            const backgroundColors = [
+                'rgba(253, 166, 25, 0.8)',
+                'rgba(46, 204, 113, 0.8)',
+                'rgba(52, 152, 219, 0.8)',
+                'rgba(155, 89, 182, 0.8)',
+                'rgba(231, 76, 60, 0.8)',
+                'rgba(255, 140, 0, 0.8)',
+                'rgba(241, 196, 15, 0.8)'
+            ];
+
+            linhaChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Total de Inspeções',
+                        data: values,
+                        backgroundColor: backgroundColors.slice(0, labels.length),
+                        borderColor: backgroundColors.slice(0, labels.length).map(c => c.replace('0.8', '1')),
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: { display: false },
+                        tooltip: {
+                            callbacks: {
+                                label: function (context) {
+                                    return `Inspeções: ${context.parsed.y}`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1,
+                                precision: 0
+                            },
+                            title: {
+                                display: true,
+                                text: 'Quantidade de Inspeções'
+                            }
+                        },
+                        x: {
+                            title: {
+                                display: true,
+                                text: 'Linha de Montagem'
+                            }
+                        }
+                    }
+                }
+            });
+
+            console.log('Gráfico de linhas atualizado:', { labels, values });
+        }
+
+        // Atualizar tabela de inspeções
+        function atualizarTabelaInspecoes(registros) {
+            const tbody = document.getElementById('ultimas-inspecoes');
+
+            if (registros.length === 0) {
+                tbody.innerHTML = `
+            <tr>
+                <td colspan="8" style="text-align: center; padding: 2rem; color: #7f8c8d;">
+                    Nenhuma inspeção encontrada
+                </td>
+            </tr>
+        `;
+                return;
+            }
+
+            tbody.innerHTML = registros.map(reg => `
+        <tr>
+            <td>${reg.id}</td>
+            <td><strong>${reg.cod_sap || 'N/A'}</strong></td>
+            <td>${reg.modelo || 'N/A'}</td>
+            <td>${reg.linha_montagem || '--'}</td>
+            <td>${formatarData(reg.data_inspecao)}</td>
+            <td><span class="badge ${getStatusClass(reg.status)}">${getStatusTexto(reg.status)}</span></td>
+            <td>${reg.inspetor || 'N/A'}</td>
+            <td>
+                <a href="registros.html" class="btn-link">Ver detalhes</a>
+            </td>
+        </tr>
+    `).join('');
+        }
+
+        // Funções auxiliares
+        function formatarData(dataString) {
+            if (!dataString) return 'N/A';
+            try {
+                const data = new Date(dataString);
+                return data.toLocaleDateString('pt-BR');
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'aprovado': 'badge-success',
+                'pendente': 'badge-warning',
+                'reprovado': 'badge-danger'
+            };
+            return classes[status?.toLowerCase()] || 'badge-warning';
+        }
+
+        function getStatusTexto(status) {
+            const textos = {
+                'aprovado': 'Aprovado',
+                'pendente': 'Pendente',
+                'reprovado': 'Reprovado'
+            };
+            return textos[status?.toLowerCase()] || 'Pendente';
+        }
+
+        // Inicializar
+        document.addEventListener('DOMContentLoaded', function () {
+            carregarDashboard();
+
+            // Atualizar a cada 30 segundos
+            setInterval(carregarDashboard, 30000);
+        });
+
+        // ========== RESPONSIVIDADE ==========
+        function ajustarResponsividade() {
+            if (window.innerWidth <= 768) {
+                document.querySelectorAll('.nav-link span').forEach(span => {
+                    span.style.display = 'none';
+                });
+            } else {
+                document.querySelectorAll('.nav-link span').forEach(span => {
+                    span.style.display = 'inline';
+                });
+            }
+        }
+
+        window.addEventListener('load', ajustarResponsividade);
+        window.addEventListener('resize', ajustarResponsividade);
+
+        // Reconfigurar gráficos ao redimensionar
+        let resizeTimer;
+        window.addEventListener('resize', function () {
+            clearTimeout(resizeTimer);
+            resizeTimer = setTimeout(function () {
+                if (statusChart) statusChart.resize();
+                if (linhaChart) linhaChart.resize();
+            }, 250);
+        });
+
+    </script>
+    <script src="auth.js"></script>
+    <script>
+        // Marcar o link ativo
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById('nav-dashboard').classList.add('active');
+        });
+    </script>
+    <!-- <script src="auth.js"></script>
+    <script>
+        // Marcar o link ativo baseado na página atual
+        document.addEventListener('DOMContentLoaded', function () {
+            const currentPage = window.location.pathname;
+
+            // Remover classe active de todos
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+
+            // Adicionar classe active no link correto
+            if (currentPage.includes('dashboard')) {
+                document.getElementById('nav-dashboard').classList.add('active');
+            } else if (currentPage.includes('registros')) {
+                document.getElementById('nav-registros').classList.add('active');
+            } else if (currentPage.includes('cartoes')) {
+                document.getElementById('nav-cartoes').classList.add('active');
+            }
+        });
+    </script> -->
+</body>
+
+</html>
