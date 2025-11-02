@@ -1,0 +1,2037 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registros de Inspeção - System Tech</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="registros.css">  
+</head>
+
+<body>
+    <header class="header">
+        <div class="logo">
+            <div class="logo-icon">
+                <i class="fas fa-industry"></i>
+            </div>
+            <div class="logo-text">
+                <h2>System Tech</h2>
+                <p>Sistema de Inspeção</p>
+            </div>
+        </div>
+
+        <div class="nav-menu">
+            <a href="dashboard.html" class="nav-link" id="nav-dashboard">
+                <i class="fas fa-tachometer-alt"></i>
+                <span>Dashboard</span>
+            </a>
+            <a href="registros.html" class="nav-link" id="nav-registros">
+                <i class="fas fa-list-check"></i>
+                <span>Registros</span>
+            </a>
+            <a href="cartoes.html" class="nav-link" id="nav-cartoes">
+                <i class="fas fa-credit-card"></i>
+                <span>Cartões</span>
+            </a>
+        </div>
+
+        <div class="user-info">
+            <div class="user-avatar">U</div>
+            <div class="user-details">
+                <p class="user-name">Usuário</p>
+                <p class="user-role">Inspetor de Qualidade</p>
+            </div>
+            <button class="logout-btn" id="logout-btn" title="Sair do sistema">
+                <i class="fas fa-sign-out-alt"></i>
+            </button>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <div class="page-title">
+                <h1><i class="fas fa-list-check"></i> Registros de Inspeção</h1>
+                <p>Visualize e gerencie todas as inspeções de produtos</p>
+            </div>
+            <div class="header-actions">
+                <input type="text" id="search-input" placeholder="Buscar por código, modelo..." class="form-control">
+                <button class="btn btn-primary" id="new-register-btn">
+                    <i class="fas fa-plus"></i>
+                    Novo Registro
+                </button>
+            </div>
+        </div>
+
+        <div class="card">
+            <div class="table-container">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Data</th>
+                            <th>Código SAP</th>
+                            <th>Descrição</th>
+                            <th >Modelo</th>
+                            <th >Qtd Total</th>
+                            <th >Qtd Insp.</th>
+                            <th >Qtd NC</th>
+                            <th style="text-align: center;">Status</th>
+                            <th style="text-align: center;">Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody id="registros-table-body">
+                        <tr>
+                            <td colspan="9" style="text-align: center; padding: 2rem; color: #6c757d;">
+                                <i class="fas fa-spinner fa-spin" style="font-size: 2rem;"></i>
+                                <p style="margin-top: 1rem;">Carregando registros...</p>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal de Criação/Edição -->
+    <div class="modal-overlay" id="registro-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modal-title">Novo Registro de Inspeção</h2>
+                <button class="close-btn" id="modal-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <form id="registro-form">
+                    <!-- Tabs -->
+                    <div class="tabs-container">
+                        <ul class="tabs">
+                            <li class="tab active" data-tab="dados-gerais">
+                                <i class="fas fa-info-circle"></i> Dados Gerais
+                            </li>
+                            <li class="tab" data-tab="checklist-tab">
+                                <i class="fas fa-tasks"></i> Checklist
+                            </li>
+                            <li class="tab" data-tab="status-tab">
+                                <i class="fas fa-clipboard-check"></i> Status
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Tab 1: Dados Gerais -->
+                    <div class="tab-content active" id="dados-gerais">
+                        <div class="form-section">
+                            <h3 class="section-title">Dados de Inspeção</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="data_inspecao" class="form-label required">Data Inspeção</label>
+                                    <input type="date" id="data_inspecao" name="data_inspecao" class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="semana" class="form-label">Semana</label>
+                                    <input type="text" id="semana" name="semana" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="cod_sap" class="form-label required">Código SAP</label>
+                                    <div class="autocomplete-container">
+                                        <input type="text" id="cod_sap" name="cod_sap" class="form-control" required
+                                            autocomplete="off" placeholder="Digite para buscar...">
+                                        <div id="autocomplete-list" class="autocomplete-list"></div>
+                                    </div>
+                                </div>
+                                <div class="form-group">
+                                    <label for="modelo" class="form-label required">Modelo</label>
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" id="modelo"
+                                        name="modelo"  class="form-control" required>
+                                </div>
+                                <div class="form-group">
+                                    <label for="familia" class="form-label">Família</label>
+                                    <input type="text" readonly id="familia" name="familia" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="linha" class="form-label">Linha</label>
+                                    <input type="text" readonly id="linha" name="linha" class="form-control">
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="descricao_sap" class="form-label">Descrição SAP</label>
+                                <textarea type="text" readonly id="descricao_sap" name="descricao_sap" class="form-control"></textarea>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="codigo_barras" class="form-label">
+                                    <i class="fas fa-barcode"></i> Código de Barras do Produto
+                                </label>
+                                <input type="text" id="codigo_barras" name="codigo_barras" class="form-control"
+                                    placeholder="Escaneie ou digite o código de barras">
+                                <div id="descricao_produto_barcode" class="barcode-info"></div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">Quantidades</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="qtd_total" class="form-label">Qtd. Total</label>
+                                    <input type="number" id="qtd_total" name="qtd_total" class="form-control" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="qtd_inspecionada" class="form-label">Qtd. Inspecionada</label>
+                                    <input type="number" id="qtd_inspecionada" name="qtd_inspecionada"
+                                        class="form-control" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="qtd_nc" class="form-label">Qtd. NC</label>
+                                    <input type="number" id="qtd_nc" name="qtd_nc" class="form-control" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="qtd_pallet" class="form-label">Num. Pallet</label>
+                                    <input type="number" id="qtd_pallet" name="qtd_pallet" class="form-control" min="0" value="0">
+                                </div>
+                                <div class="form-group">
+                                    <label for="rastreabilidade" class="form-label">Rastreabilidade</label>
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()"
+                                        id="rastreabilidade" name="rastreabilidade" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="po" class="form-label">P.O.</label>
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" id="po" name="po"
+                                        class="form-control">
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-section">
+                            <h3 class="section-title">Operação</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="turno" class="form-label">Turno</label>
+                                    <select id="turno" name="turno" class="form-control">
+                                        <option value="">Selecione</option>
+                                        <option value="A">Turno A</option>
+                                        <option value="B">Turno B</option>
+                                        <option value="C">Turno C</option>
+                                    </select>
+                                </div>
+                                <div class="form-group">
+                                    <label for="linha_montagem" class="form-label">Linha Montagem</label>
+                                    <select id="linha_montagem" name="linha_montagem" class="form-control">
+                                        <option value="">Selecione</option>
+                                        <option value="LM-01">Linha 01</option>
+                                        <option value="LM-02">Linha 02</option>
+                                        <option value="LM-03">Linha 03</option>
+                                        <option value="LM-04">Linha 04</option>
+                                        <option value="LM-05">Linha 05</option>
+                                        <option value="LM-06">Linha 06</option>
+                                        <option value="LM-07">Linha 07</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 2: Checklist -->
+                    <div class="tab-content" id="checklist-tab">
+                        <div class="form-section">
+                            <div class="checklist-section">
+                                <h4 class="checklist-title">
+                                    <i class="fas fa-bolt" style="color: #e74c3c;"></i>
+                                    Teste de Avaliação do Motor
+                                </h4>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>Corrente</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <input type="number" step="0.01" class="value-input" id="corrente_valor" placeholder="Valor">
+                                        <span class="unit">A</span>
+                                        <div class="radio-option">
+                                            <input type="radio" id="corrente_ok" name="corrente_conforme" value="true">
+                                            <label for="corrente_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="corrente_nc" name="corrente_conforme" value="false">
+                                            <label for="corrente_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-tachometer-alt"></i>
+                                        <span>Potência</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <input type="number" step="0.01" class="value-input" id="potencia_valor" placeholder="Valor">
+                                        <span class="unit">W</span>
+                                        <div class="radio-option">
+                                            <input type="radio" id="potencia_ok" name="potencia_conforme" value="true">
+                                            <label for="potencia_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="potencia_nc" name="potencia_conforme" value="false">
+                                            <label for="potencia_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checklist-section">
+                                <h4 class="checklist-title">
+                                    <i class="fas fa-plug" style="color: #3498db;"></i>
+                                    HI-POT e Componentes Elétricos
+                                </h4>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-bolt"></i>
+                                        <span>HI-POT</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="hipot_ok" name="hipot_conforme" value="true">
+                                            <label for="hipot_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="hipot_nc" name="hipot_conforme" value="false">
+                                            <label for="hipot_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-tag"></i>
+                                        <span>Etiquetas</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="etiquetas_ok" name="etiquetas_conforme" value="true">
+                                            <label for="etiquetas_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="etiquetas_nc" name="etiquetas_conforme" value="false">
+                                            <label for="etiquetas_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-plug"></i>
+                                        <span>Plugue/Rede</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="plugue_ok" name="plugue_conforme" value="true">
+                                            <label for="plugue_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="plugue_nc" name="plugue_conforme" value="false">
+                                            <label for="plugue_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="checklist-section">
+                                <h4 class="checklist-title">
+                                    <i class="fas fa-eye" style="color: #9b59b6;"></i>
+                                    Inspeção Visual
+                                </h4>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-paint-brush"></i>
+                                        <span>Grafismos</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="grafismos_ok" name="grafismos_conforme" value="true">
+                                            <label for="grafismos_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="grafismos_nc" name="grafismos_conforme" value="false">
+                                            <label for="grafismos_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-box"></i>
+                                        <span>Embalagens</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="embalagens_ok" name="embalagens_conforme" value="true">
+                                            <label for="embalagens_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="embalagens_nc" name="embalagens_conforme" value="false">
+                                            <label for="embalagens_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-cube"></i>
+                                        <span>Peças Injetadas</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="pecas_ok" name="pecas_injetadas_conforme" value="true">
+                                            <label for="pecas_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="pecas_nc" name="pecas_injetadas_conforme" value="false">
+                                            <label for="pecas_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-tools"></i>
+                                        <span>Montagem</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="montagem_ok" name="montagem_conforme" value="true">
+                                            <label for="montagem_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="montagem_nc" name="montagem_conforme" value="false">
+                                            <label for="montagem_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="checklist-item">
+                                    <div class="checklist-label">
+                                        <i class="fas fa-eye"></i>
+                                        <span>Visual Geral</span>
+                                    </div>
+                                    <div class="checklist-options">
+                                        <div class="radio-option">
+                                            <input type="radio" id="visual_ok" name="visual_conforme" value="true">
+                                            <label for="visual_ok">Conforme</label>
+                                        </div>
+                                        <div class="radio-option">
+                                            <input type="radio" id="visual_nc" name="visual_conforme" value="false">
+                                            <label for="visual_nc">NC</label>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tab 3: Status -->
+                    <div class="tab-content" id="status-tab">
+                        <div class="form-section">
+                            <h3 class="section-title">Status da Inspeção</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="inspetor" class="form-label required">Inspetor</label>
+                                    <input type="text" id="inspetor" name="inspetor" class="form-control" required
+                                        readonly style="background-color: #e9ecef; cursor: not-allowed;">
+                                    <p style="font-size: 0.8rem; color: #6c757d; margin-top: 0.25rem;">
+                                        Preenchido automaticamente com seu usuário
+                                    </p>
+                                </div>
+                                <div class="form-group">
+                                    <label for="status" class="form-label required">Status</label>
+                                    <select id="status" name="status" class="form-control" required>
+                                        <option value="pendente">Pendente</option>
+                                        <option value="aprovado">Aprovado</option>
+                                        <option value="reprovado">Reprovado</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="observacao" class="form-label">Observação</label>
+                                <textarea id="observacao" oninput="this.value = this.value.toUpperCase()"
+                                    name="observacao" class="form-control"></textarea>
+                            </div>
+                        </div>
+
+                        <div class="divider"></div>
+
+                        <div class="form-section" id="nao-conformidade-section" style="display: none;">
+                            <h3 class="section-title">Não Conformidade</h3>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="documento" class="form-label">Documento</label>
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" id="documento"
+                                        name="documento" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="defeito" class="form-label">Defeito</label>
+                                    <input type="text" oninput="this.value = this.value.toUpperCase()" id="defeito"
+                                        name="defeito" class="form-control">
+                                </div>
+                                <div class="form-group">
+                                    <label for="prioridade" class="form-label">Prioridade</label>
+                                    <select id="prioridade" name="prioridade" class="form-control">
+                                        <option value="">Selecione</option>
+                                        <option value="critico">Crítico</option>
+                                        <option value="primario">Primário</option>
+                                        <option value="secundario">Secundário</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="form-group">
+                                <label for="origem_problema" class="form-label">Origem do Problema</label>
+                                <select id="origem_problema" name="origem_problema" class="form-control">
+                                    <option value="">Selecione</option>
+                                    <option value="Injeção">Injeção</option>
+                                    <option value="Montagem">Montagem</option>
+                                    <option value="Logística">Logística</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="action-buttons">
+                        <button type="button" class="btn-modal btn-modal-outline" id="modal-cancel-btn">Cancelar</button>
+                        <button type="submit" class="btn-modal btn-modal-primary" id="modal-save-btn">Salvar Registro</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Visualização -->
+    <div class="modal-overlay" id="view-modal">
+        <div class="modal view-modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="view-title">Detalhes do Registro</h2>
+                <button class="close-btn" id="view-close-btn">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="form-section">
+                    <h3 class="section-title">Dados de Inspeção</h3>
+                    <div class="view-grid">
+                        <div class="view-item">
+                            <span class="view-label">Data Inspeção:</span>
+                            <span class="view-value" id="view-data_inspecao">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Semana:</span>
+                            <span class="view-value" id="view-semana">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Código SAP:</span>
+                            <span class="view-value" id="view-cod_sap">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Modelo:</span>
+                            <span class="view-value" id="view-modelo">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Família:</span>
+                            <span class="view-value" id="view-familia">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Linha:</span>
+                            <span class="view-value" id="view-linha">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Quantidades</h3>
+                    <div class="view-grid">
+                        <div class="view-item">
+                            <span class="view-label">Qtd. Total:</span>
+                            <span class="view-value" id="view-qtd_total">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Qtd. Inspecionada:</span>
+                            <span class="view-value" id="view-qtd_inspecionada">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Qtd. NC:</span>
+                            <span class="view-value" id="view-qtd_nc">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Qtd. Pallet:</span>
+                            <span class="view-value" id="view-qtd_pallet">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Operação</h3>
+                    <div class="view-grid">
+                        <div class="view-item">
+                            <span class="view-label">Turno:</span>
+                            <span class="view-value" id="view-turno">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Linha Montagem:</span>
+                            <span class="view-value" id="view-linha_montagem">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Inspetor:</span>
+                            <span class="view-value" id="view-inspetor">-</span>
+                        </div>
+                        <div class="view-item">
+                            <span class="view-label">Status:</span>
+                            <span class="view-value" id="view-status">-</span>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <div class="form-section">
+                    <h3 class="section-title">Observações</h3>
+                    <div class="view-item" style="margin-top: 1rem;">
+                        <span class="view-label">Observação:</span>
+                        <div id="view-observacao" style="
+                            margin-top: 0.5rem;
+                            padding: 1rem;
+                            background: #f8f9fa;
+                            border-radius: 8px;
+                            color: #2c3e50;
+                            font-size: 1rem;
+                            line-height: 1.6;
+                            min-height: 60px;
+                            white-space: pre-wrap;
+                            word-wrap: break-word;
+                        ">-</div>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button type="button" class="btn-modal btn-modal-outline" id="view-cancel-btn">Fechar</button>
+                    <button type="button" class="btn-modal btn-modal-primary" id="view-edit-btn">Editar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal de Impressão -->
+    <div class="modal-overlay" id="print-modal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">
+                    <i class="fas fa-print"></i> Pré-visualização do Cartão
+                </h2>
+                <button class="close-btn" id="print-close-btn">&times;</button>
+            </div>
+            <div class="modal-body" style="padding: 0;">
+                <div class="card-header-print">
+                    <h1>CARTÃO DE QUALIDADE</h1>
+                    <h2 id="print-cod-sap">-</h2>
+                </div>
+
+                <div class="card-body-print">
+                    <div class="info-grid-print">
+                        <div class="info-item-print">
+                            <span class="info-label-print">📅 Data</span>
+                            <span class="info-value-print" id="print-data">-</span>
+                        </div>
+                        <div class="info-item-print">
+                            <span class="info-label-print">🕐 Turno</span>
+                            <span class="info-value-print" id="print-turno">-</span>
+                        </div>
+                        <div class="info-item-print">
+                            <span class="info-label-print">🏭 Linha de Montagem</span>
+                            <span class="info-value-print" id="print-linha-montagem">-</span>
+                        </div>
+                        <div class="info-item-print">
+                            <span class="info-label-print">👤 Inspetor</span>
+                            <span class="info-value-print" id="print-inspetor">-</span>
+                        </div>
+                    </div>
+
+                    <div style="text-align: center; margin: 1.5rem 0;">
+                        <div class="status-badge-print" id="print-status-badge">-</div>
+                    </div>
+
+                    <div class="paletes-info">
+                        <span id="print-paletes-liberados" style="font-size: 1.1rem;">-</span>
+                    </div>
+
+                    <div class="section-print">
+                        <div class="section-title-print">🔍 Rastreabilidade</div>
+                        <div class="section-content-print" id="print-rastreabilidade">-</div>
+                    </div>
+
+                    <div class="section-print">
+                        <div class="section-title-print">📋 P.O.</div>
+                        <div class="section-content-print" id="print-po">-</div>
+                    </div>
+
+                    <div class="section-print">
+                        <div class="section-title-print">💬 Observações</div>
+                        <div class="section-content-print" id="print-observacao">-</div>
+                    </div>
+
+                    <div class="footer-print">
+                        <div class="emission-date-print" id="print-emission-date">-</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="action-buttons" style="padding: 1.5rem;">
+                <button type="button" class="btn-modal btn-modal-outline" id="print-cancel-btn">
+                    <i class="fas fa-times"></i> Fechar
+                </button>
+                <button type="button" class="btn-modal btn-modal-primary" id="execute-print-btn">
+                    <i class="fas fa-print"></i> Imprimir
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuração
+        const API_URL = 'http://localhost:5000/api/registros';
+        let isEditing = false;
+        let currentRegistroId = null;
+        let allRegistros = [];
+
+        // Toast System
+        class Toast {
+            constructor() {
+                this.createToastContainer();
+            }
+
+            createToastContainer() {
+                if (!document.getElementById('toast-container')) {
+                    const container = document.createElement('div');
+                    container.id = 'toast-container';
+                    container.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        z-index: 9999;
+                    `;
+                    document.body.appendChild(container);
+                }
+            }
+
+            show(title, message, type = 'success', duration = 3000) {
+                const toast = document.createElement('div');
+                toast.style.cssText = `
+                    margin-bottom: 10px;
+                    padding: 15px 20px;
+                    background: white;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+                    display: flex;
+                    align-items: center;
+                    gap: 12px;
+                    animation: slideIn 0.3s ease;
+                    min-width: 300px;
+                    border-left: 4px solid ${this.getColor(type)};
+                `;
+
+                toast.innerHTML = `
+                    <div style="flex-shrink: 0; color: ${this.getColor(type)}">${this.getIcon(type)}</div>
+                    <div style="flex-grow: 1">
+                        <div style="font-weight: 600; margin-bottom: 4px">${title}</div>
+                        <div style="color: #666; font-size: 0.9em">${message}</div>
+                    </div>
+                    <button class="toast-close" style="background: none; border: none; cursor: pointer; color: #999">
+                        <i class="fas fa-times"></i>
+                    </button>
+                `;
+
+                const container = document.getElementById('toast-container');
+                container.appendChild(toast);
+
+                const style = document.createElement('style');
+                style.textContent = `
+                    @keyframes slideIn {
+                        from { transform: translateX(100%); opacity: 0; }
+                        to { transform: translateX(0); opacity: 1; }
+                    }
+                `;
+                if (!document.getElementById('toast-styles')) {
+                    style.id = 'toast-styles';
+                    document.head.appendChild(style);
+                }
+
+                toast.querySelector('.toast-close').addEventListener('click', () => {
+                    this.closeToast(toast);
+                });
+
+                setTimeout(() => {
+                    this.closeToast(toast);
+                }, duration);
+            }
+
+            closeToast(toast) {
+                toast.style.animation = 'slideOut 0.3s ease forwards';
+                setTimeout(() => {
+                    toast.remove();
+                }, 300);
+            }
+
+            getIcon(type) {
+                const icons = {
+                    success: '<i class="fas fa-check-circle"></i>',
+                    error: '<i class="fas fa-times-circle"></i>',
+                    warning: '<i class="fas fa-exclamation-circle"></i>',
+                    info: '<i class="fas fa-info-circle"></i>'
+                };
+                return icons[type] || icons.info;
+            }
+
+            getColor(type) {
+                const colors = {
+                    success: '#2ecc71',
+                    error: '#e74c3c',
+                    warning: '#f1c40f',
+                    info: '#3498db'
+                };
+                return colors[type] || colors.info;
+            }
+        }
+
+        const toast = new Toast();
+
+        // Autocomplete
+        let autocompleteTimeout = null;
+        let currentFocus = -1;
+
+        function setupAutocomplete() {
+            const input = document.getElementById('cod_sap');
+            const list = document.getElementById('autocomplete-list');
+
+            if (!input || !list) return;
+
+            input.addEventListener('input', function () {
+                const valor = this.value.trim().toUpperCase();
+                this.value = valor;
+
+                clearTimeout(autocompleteTimeout);
+
+                if (valor.length < 2) {
+                    list.classList.remove('active');
+                    return;
+                }
+
+                input.classList.add('loading');
+
+                autocompleteTimeout = setTimeout(() => {
+                    buscarCodigosSAP(valor);
+                }, 300);
+            });
+
+            document.addEventListener('click', function (e) {
+                if (!input.contains(e.target) && !list.contains(e.target)) {
+                    list.classList.remove('active');
+                }
+            });
+
+            input.addEventListener('keydown', function (e) {
+                const items = list.getElementsByClassName('autocomplete-item');
+
+                if (e.key === 'ArrowDown') {
+                    e.preventDefault();
+                    currentFocus++;
+                    addActive(items);
+                } else if (e.key === 'ArrowUp') {
+                    e.preventDefault();
+                    currentFocus--;
+                    addActive(items);
+                } else if (e.key === 'Enter') {
+                    e.preventDefault();
+                    if (currentFocus > -1 && items[currentFocus]) {
+                        items[currentFocus].click();
+                    }
+                } else if (e.key === 'Escape') {
+                    list.classList.remove('active');
+                }
+            });
+
+            function addActive(items) {
+                if (!items) return;
+                removeActive(items);
+                if (currentFocus >= items.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = items.length - 1;
+                items[currentFocus].classList.add('autocomplete-active');
+                items[currentFocus].scrollIntoView({ block: 'nearest' });
+            }
+
+            function removeActive(items) {
+                for (let item of items) {
+                    item.classList.remove('autocomplete-active');
+                }
+            }
+        }
+
+        async function buscarCodigosSAP(termo) {
+            const input = document.getElementById('cod_sap');
+            const list = document.getElementById('autocomplete-list');
+
+            try {
+                const response = await fetch(`http://localhost:5000/api/produtos/search?q=${encodeURIComponent(termo)}`);
+                input.classList.remove('loading');
+
+                if (!response.ok) throw new Error('Erro na API');
+
+                const result = await response.json();
+
+                if (result.success && result.data && result.data.length > 0) {
+                    mostrarSugestoes(result.data);
+                } else {
+                    mostrarVazio();
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                input.classList.remove('loading');
+            }
+        }
+
+        function mostrarSugestoes(produtos) {
+            const list = document.getElementById('autocomplete-list');
+            currentFocus = -1;
+
+            list.innerHTML = produtos.map(produto => `
+                <div class="autocomplete-item" onclick="selecionarProduto('${produto.cod_material}')">
+                    <div class="autocomplete-item-code">
+                        <i class="fas fa-barcode"></i> ${produto.cod_material}
+                    </div>
+                    ${produto.desc_material ? `
+                        <div class="autocomplete-item-desc">${produto.desc_material}</div>
+                    ` : ''}
+                    <div class="autocomplete-item-details">
+                        ${produto.cod_familia ? `Família: ${produto.cod_familia}` : ''}
+                        ${produto.cod_linha ? ` • Linha: ${produto.cod_linha}` : ''}
+                    </div>
+                </div>
+            `).join('');
+
+            list.classList.add('active');
+        }
+
+        function mostrarVazio() {
+            const list = document.getElementById('autocomplete-list');
+            list.innerHTML = `
+                <div style="padding: 1rem; text-align: center; color: #6c757d;">
+                    <i class="fas fa-search"></i> Nenhum produto encontrado
+                </div>
+            `;
+            list.classList.add('active');
+        }
+
+        async function selecionarProduto(codigoSAP) {
+            const input = document.getElementById('cod_sap');
+            const list = document.getElementById('autocomplete-list');
+
+            input.value = codigoSAP;
+            list.classList.remove('active');
+
+            await buscarProdutoPorCodigoSAP();
+            document.getElementById('modelo').focus();
+        }
+
+        // Inicialização
+        document.addEventListener('DOMContentLoaded', function () {
+            console.log('Inicializando aplicação...');
+            setupEventListeners();
+            carregarRegistros();
+        });
+
+        // Event Listeners
+        function setupEventListeners() {
+            document.getElementById('new-register-btn').addEventListener('click', abrirNovoRegistro);
+            document.getElementById('modal-close-btn').addEventListener('click', fecharModal);
+            document.getElementById('modal-cancel-btn').addEventListener('click', fecharModal);
+            document.getElementById('registro-form').addEventListener('submit', salvarRegistro);
+
+            document.getElementById('view-close-btn').addEventListener('click', fecharModalVisualizacao);
+            document.getElementById('view-cancel-btn').addEventListener('click', fecharModalVisualizacao);
+            document.getElementById('view-edit-btn').addEventListener('click', editarDaVisualizacao);
+
+            document.getElementById('cod_sap').addEventListener('blur', buscarProdutoPorCodigoSAP);
+            document.getElementById('cod_sap').addEventListener('keypress', function (e) {
+                if (e.key === 'Enter') {
+                    e.preventDefault();
+                    buscarProdutoPorCodigoSAP();
+                }
+            });
+
+            // Event listener para detectar mudança no código SAP e revalidar código de barras
+            document.getElementById('cod_sap').addEventListener('input', function() {
+                const codigoBarras = document.getElementById('codigo_barras').value.trim();
+                if (codigoBarras) {
+                    // Se já existe código de barras, revalidar quando SAP mudar
+                    setTimeout(() => {
+                        validarCorrespondenciaCodigoBarras();
+                    }, 500);
+                }
+            });
+
+            // Event listener para código de barras com validação automática
+            const codigoBarrasInput = document.getElementById('codigo_barras');
+            codigoBarrasInput.addEventListener('input', function() {
+                const valor = this.value.trim();
+                // Quando o código de barras tem 13 ou mais caracteres, valida automaticamente
+                if (valor.length >= 13) {
+                    buscarProdutoPorCodigoBarras();
+                }
+            });
+
+            document.getElementById('status').addEventListener('change', toggleNaoConformidade);
+
+            document.getElementById('search-input').addEventListener('input', filtrarRegistros);
+
+            setupTabs();
+            setupAutocomplete();
+
+            // Event listeners para impressão
+            const printCloseBtn = document.getElementById('print-close-btn');
+            const printCancelBtn = document.getElementById('print-cancel-btn');
+            const executePrintBtn = document.getElementById('execute-print-btn');
+            const printModal = document.getElementById('print-modal');
+
+            if (printCloseBtn) {
+                printCloseBtn.addEventListener('click', fecharModalImpressao);
+            }
+
+            if (printCancelBtn) {
+                printCancelBtn.addEventListener('click', fecharModalImpressao);
+            }
+
+            if (executePrintBtn) {
+                executePrintBtn.addEventListener('click', executarImpressao);
+            }
+
+            if (printModal) {
+                printModal.addEventListener('click', function(e) {
+                    if (e.target === this) fecharModalImpressao();
+                });
+            }
+        }
+
+        // Buscar produto por código SAP
+        async function buscarProdutoPorCodigoSAP() {
+            const codigoSAP = document.getElementById('cod_sap').value.trim();
+
+            if (!codigoSAP) return;
+
+            try {
+                const codSapInput = document.getElementById('cod_sap');
+                const originalBorder = codSapInput.style.border;
+                codSapInput.style.border = '2px solid #3498db';
+                codSapInput.disabled = true;
+
+                const response = await fetch(`http://localhost:5000/api/produtos/${codigoSAP}`);
+
+                codSapInput.style.border = originalBorder;
+                codSapInput.disabled = false;
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        mostrarAviso('Produto não encontrado na base de dados');
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const produto = result.data;
+
+                    if (produto.cod_familia) {
+                        document.getElementById('familia').value = produto.cod_familia;
+                    }
+
+                    if (produto.cod_linha) {
+                        document.getElementById('linha').value = produto.cod_linha;
+                    }
+
+                    if (produto.desc_material) {
+                        document.getElementById('descricao_sap').value = produto.desc_material;
+                    }
+
+                    codSapInput.style.border = '2px solid #2ecc71';
+                    setTimeout(() => {
+                        codSapInput.style.border = originalBorder;
+                    }, 2000);
+
+                    mostrarSucesso('Dados do produto carregados!');
+                }
+
+            } catch (error) {
+                console.error('Erro ao buscar produto:', error);
+                const codSapInput = document.getElementById('cod_sap');
+                codSapInput.disabled = false;
+                codSapInput.style.border = '2px solid #e74c3c';
+                setTimeout(() => {
+                    codSapInput.style.border = '';
+                }, 2000);
+
+                if (!error.message.includes('404')) {
+                    mostrarErro('Erro ao buscar dados do produto');
+                }
+            }
+        }
+
+        // Buscar por código de barras - VERSÃO ATUALIZADA COM VALIDAÇÃO AUTOMÁTICA
+        async function buscarProdutoPorCodigoBarras() {
+            const codigoBarras = document.getElementById('codigo_barras').value.trim();
+            const descricaoDiv = document.getElementById('descricao_produto_barcode');
+
+            if (!codigoBarras) {
+                descricaoDiv.className = 'barcode-info';
+                descricaoDiv.textContent = '';
+                return;
+            }
+
+            try {
+                const codigoBarrasInput = document.getElementById('codigo_barras');
+                const originalBorder = codigoBarrasInput.style.border;
+                codigoBarrasInput.style.border = '2px solid #3498db';
+                codigoBarrasInput.disabled = true;
+
+                descricaoDiv.className = 'barcode-info show';
+                descricaoDiv.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Buscando produto...';
+
+                const response = await fetch(`http://localhost:5000/api/produtos/barcode/${codigoBarras}`);
+
+                codigoBarrasInput.style.border = originalBorder;
+                codigoBarrasInput.disabled = false;
+
+                if (!response.ok) {
+                    if (response.status === 404) {
+                        descricaoDiv.className = 'barcode-info show warning';
+                        descricaoDiv.innerHTML = `
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <strong>Produto não encontrado com este código de barras</strong>
+                        `;
+                        mostrarAviso('Produto não encontrado');
+                        setTimeout(() => {
+                            descricaoDiv.className = 'barcode-info';
+                        }, 5000);
+                        return;
+                    }
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const produto = result.data;
+                    const codigoSAPDigitado = document.getElementById('cod_sap').value.trim();
+
+                    // Verificar se o código de barras corresponde ao produto
+                    if (codigoSAPDigitado && produto.cod_material) {
+                        if (produto.cod_material !== codigoSAPDigitado) {
+                            descricaoDiv.className = 'barcode-info show error';
+                            descricaoDiv.innerHTML = `
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <strong>⚠️ ATENÇÃO: Código de barras não pertence a este produto!</strong><br>
+                                    <small>Esperado: ${codigoSAPDigitado} | Encontrado: ${produto.cod_material}</small><br>
+                                    <small>Produto: ${produto.desc_material || 'N/A'}</small>
+                                </div>
+                            `;
+
+                            codigoBarrasInput.style.border = '2px solid #e74c3c';
+                            setTimeout(() => {
+                                codigoBarrasInput.style.border = originalBorder;
+                            }, 3000);
+
+                            mostrarErro('Código de barras não pertence ao produto informado!');
+                            return;
+                        }
+                    }
+
+                    // Sucesso - preencher informações
+                    if (produto.desc_material) {
+                        descricaoDiv.className = 'barcode-info show success';
+                        descricaoDiv.innerHTML = `
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>${produto.desc_material}</strong><br>
+                                <small>Código SAP: ${produto.cod_material}</small>
+                            </div>
+                        `;
+                    }
+
+                    // Se não tinha código SAP, preencher automaticamente
+                    if (!codigoSAPDigitado && produto.cod_material) {
+                        document.getElementById('cod_sap').value = produto.cod_material;
+                        await buscarProdutoPorCodigoSAP();
+                    }
+
+                    codigoBarrasInput.style.border = '2px solid #2ecc71';
+                    setTimeout(() => {
+                        codigoBarrasInput.style.border = originalBorder;
+                    }, 2000);
+
+                    mostrarSucesso('Código de barras validado!');
+                }
+
+            } catch (error) {
+                console.error('Erro:', error);
+                const codigoBarrasInput = document.getElementById('codigo_barras');
+                codigoBarrasInput.disabled = false;
+                codigoBarrasInput.style.border = '2px solid #e74c3c';
+                setTimeout(() => {
+                    codigoBarrasInput.style.border = '';
+                }, 2000);
+
+                descricaoDiv.className = 'barcode-info show error';
+                descricaoDiv.innerHTML = '<i class="fas fa-times-circle"></i> Erro ao buscar produto';
+
+                if (!error.message.includes('404')) {
+                    mostrarErro('Erro ao buscar produto');
+                }
+            }
+        }
+
+        // NOVA FUNÇÃO: Validar correspondência quando o código SAP muda
+        async function validarCorrespondenciaCodigoBarras() {
+            const codigoBarras = document.getElementById('codigo_barras').value.trim();
+            const codigoSAPDigitado = document.getElementById('cod_sap').value.trim();
+            const descricaoDiv = document.getElementById('descricao_produto_barcode');
+
+            // Se não tem código de barras ou não tem SAP, não fazer nada
+            if (!codigoBarras || !codigoSAPDigitado) {
+                return;
+            }
+
+            try {
+                // Buscar o produto pelo código de barras
+                const response = await fetch(`http://localhost:5000/api/produtos/barcode/${codigoBarras}`);
+
+                if (!response.ok) {
+                    return; // Se não encontrar, não fazer nada
+                }
+
+                const result = await response.json();
+
+                if (result.success && result.data) {
+                    const produtoDoBarcode = result.data;
+
+                    // Verificar se o código SAP digitado corresponde ao do código de barras
+                    if (produtoDoBarcode.cod_material !== codigoSAPDigitado) {
+                        // INCOMPATÍVEL!
+                        const codigoBarrasInput = document.getElementById('codigo_barras');
+                        
+                        descricaoDiv.className = 'barcode-info show error';
+                        descricaoDiv.innerHTML = `
+                            <i class="fas fa-exclamation-triangle"></i>
+                            <div>
+                                <strong>⚠️ ATENÇÃO: Código de barras não corresponde ao Código SAP!</strong><br>
+                                <small>Código SAP digitado: ${codigoSAPDigitado}</small><br>
+                                <small>Código de barras pertence a: ${produtoDoBarcode.cod_material}</small><br>
+                                <small>Produto: ${produtoDoBarcode.desc_material || 'N/A'}</small>
+                            </div>
+                        `;
+
+                        codigoBarrasInput.style.border = '2px solid #e74c3c';
+                        
+                        mostrarErro('Código de barras não corresponde ao produto selecionado!');
+                        
+                        setTimeout(() => {
+                            codigoBarrasInput.style.border = '';
+                        }, 3000);
+
+                    } else {
+                        // COMPATÍVEL!
+                        descricaoDiv.className = 'barcode-info show success';
+                        descricaoDiv.innerHTML = `
+                            <i class="fas fa-check-circle"></i>
+                            <div>
+                                <strong>${produtoDoBarcode.desc_material}</strong><br>
+                                <small>Código SAP: ${produtoDoBarcode.cod_material} ✓ Validado</small>
+                            </div>
+                        `;
+
+                        const codigoBarrasInput = document.getElementById('codigo_barras');
+                        codigoBarrasInput.style.border = '2px solid #2ecc71';
+                        
+                        setTimeout(() => {
+                            codigoBarrasInput.style.border = '';
+                        }, 2000);
+                    }
+                }
+
+            } catch (error) {
+                console.error('Erro ao validar correspondência:', error);
+            }
+        }
+
+        // Tabs
+        function setupTabs() {
+            const tabs = document.querySelectorAll('.tab');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', function (e) {
+                    e.preventDefault();
+
+                    document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                    document.querySelectorAll('.tab-content').forEach(content => content.classList.remove('active'));
+
+                    this.classList.add('active');
+
+                    const tabId = this.getAttribute('data-tab');
+                    const tabContent = document.getElementById(tabId);
+
+                    if (tabContent) {
+                        tabContent.classList.add('active');
+                    }
+                });
+            });
+        }
+
+        // Toggle Não Conformidade
+        function toggleNaoConformidade() {
+            const statusSelect = document.getElementById('status');
+            const naoConformidadeSection = document.getElementById('nao-conformidade-section');
+
+            if (statusSelect.value === 'reprovado') {
+                naoConformidadeSection.style.display = 'block';
+            } else {
+                naoConformidadeSection.style.display = 'none';
+                document.getElementById('documento').value = '';
+                document.getElementById('defeito').value = '';
+                document.getElementById('prioridade').value = '';
+                document.getElementById('origem_problema').value = '';
+            }
+        }
+
+        // Carregar registros
+        async function carregarRegistros() {
+            try {
+                const response = await fetch(API_URL);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    allRegistros = result.data || [];
+                    preencherTabela(allRegistros);
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar registros');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarErro('Não foi possível carregar os registros');
+
+                const tbody = document.getElementById('registros-table-body');
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem; color: #e74c3c;">
+                            <i class="fas fa-exclamation-triangle" style="font-size: 2rem;"></i>
+                            <p style="margin-top: 1rem;">Erro ao carregar registros</p>
+                        </td>
+                    </tr>
+                `;
+            }
+        }
+
+        // Preencher tabela
+        function preencherTabela(registros) {
+            const tbody = document.getElementById('registros-table-body');
+            tbody.innerHTML = '';
+
+            if (registros.length === 0) {
+                tbody.innerHTML = `
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 2rem; color: #6c757d;">
+                            <i class="fas fa-inbox" style="font-size: 2rem;"></i>
+                            <p style="margin-top: 1rem;">Nenhum registro encontrado</p>
+                        </td>
+                    </tr>
+                `;
+                return;
+            }
+
+            registros.forEach(registro => {
+                const tr = document.createElement('tr');
+                const dataFormatada = formatarData(registro.data_inspecao);
+                const statusClass = getStatusClass(registro.status);
+                const statusTexto = getStatusTexto(registro.status);
+
+                tr.innerHTML = `
+                    <td>${dataFormatada}</td>
+                    <td><strong>${registro.cod_sap || 'N/A'}</strong></td>
+                    <td>
+                        <div style="
+                            max-width: 300px;
+                            white-space: nowrap;
+                            overflow: hidden;
+                            text-overflow: ellipsis;
+                            font-size: 0.9em;
+                            color: #666;
+                        " title="${registro.descricao_sap || 'Sem descrição'}">
+                            ${registro.descricao_sap || 'Sem descrição'}
+                        </div>
+                    </td>
+                    <td>${registro.modelo || 'N/A'}</td>
+                    <td>${registro.qtd_total || 0}</td>
+                    <td>${registro.qtd_inspecionada || 0}</td>
+                    <td>${registro.qtd_nc || 0}</td>
+                    <td><span class="badge ${statusClass}">${statusTexto}</span></td>
+                    <td style="text-align: center;">
+                        <div class="table-actions">
+                            <button class="action-btn view-btn" onclick="visualizarRegistro(${registro.id})" title="Visualizar">
+                                <i class="fas fa-eye"></i>
+                            </button>
+                            <button class="action-btn edit-btn" onclick="editarRegistro(${registro.id})" title="Editar">
+                                <i class="fas fa-edit"></i>
+                            </button>
+                            <button class="action-btn print-btn" onclick="imprimirCartao(${registro.id})" title="Imprimir">
+                                <i class="fas fa-print"></i>
+                            </button>
+                            <button class="action-btn delete-btn" onclick="excluirRegistro(${registro.id})" title="Excluir">
+                                <i class="fas fa-trash"></i>
+                            </button>
+                        </div>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        // Formatação
+        function formatarData(dataString) {
+            if (!dataString) return 'N/A';
+            try {
+                const data = new Date(dataString);
+                return data.toLocaleDateString('pt-BR');
+            } catch (e) {
+                return 'N/A';
+            }
+        }
+
+        function getStatusClass(status) {
+            const classes = {
+                'aprovado': 'badge-success',
+                'pendente': 'badge-warning',
+                'reprovado': 'badge-danger'
+            };
+            return classes[status?.toLowerCase()] || 'badge-warning';
+        }
+
+        function getStatusTexto(status) {
+            const textos = {
+                'aprovado': 'Aprovado',
+                'pendente': 'Pendente',
+                'reprovado': 'Reprovado'
+            };
+            return textos[status?.toLowerCase()] || 'Pendente';
+        }
+
+        // Abrir novo registro
+        function abrirNovoRegistro() {
+            isEditing = false;
+            currentRegistroId = null;
+            limparFormulario();
+            document.getElementById('modal-title').textContent = 'Novo Registro de Inspeção';
+            document.getElementById('modal-save-btn').textContent = 'Criar Registro';
+
+            const hoje = new Date().toISOString().split('T')[0];
+            document.getElementById('data_inspecao').value = hoje;
+
+            if (window.auth) {
+                const nomeInspetor = auth.getUserName();
+                document.getElementById('inspetor').value = nomeInspetor;
+            }
+
+            const naoConformidadeSection = document.getElementById('nao-conformidade-section');
+            if (naoConformidadeSection) {
+                naoConformidadeSection.style.display = 'none';
+            }
+
+            // Limpar informação do código de barras
+            const barcodeInfo = document.getElementById('descricao_produto_barcode');
+            if (barcodeInfo) {
+                barcodeInfo.className = 'barcode-info';
+                barcodeInfo.textContent = '';
+            }
+
+            abrirModal();
+
+            setTimeout(() => {
+                setupTabs();
+                document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                document.querySelector('.tab[data-tab="dados-gerais"]').classList.add('active');
+                document.getElementById('dados-gerais').classList.add('active');
+            }, 100);
+        }
+
+        // Visualizar registro
+        async function visualizarRegistro(id) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    preencherModalVisualizacao(result.data);
+                    currentRegistroId = id;
+                    abrirModalVisualizacao();
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar registro');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarErro('Não foi possível visualizar o registro');
+            }
+        }
+
+        // Preencher modal de visualização
+        function preencherModalVisualizacao(dados) {
+            document.getElementById('view-title').textContent = `Registro #${dados.id}`;
+            document.getElementById('view-data_inspecao').textContent = formatarData(dados.data_inspecao);
+            document.getElementById('view-semana').textContent = dados.semana || '-';
+            document.getElementById('view-cod_sap').textContent = dados.cod_sap || '-';
+            document.getElementById('view-modelo').textContent = dados.modelo || '-';
+            document.getElementById('view-familia').textContent = dados.familia || '-';
+            document.getElementById('view-linha').textContent = dados.linha || '-';
+            document.getElementById('view-qtd_total').textContent = dados.qtd_total || 0;
+            document.getElementById('view-qtd_inspecionada').textContent = dados.qtd_inspecionada || 0;
+            document.getElementById('view-qtd_nc').textContent = dados.qtd_nc || 0;
+            document.getElementById('view-qtd_pallet').textContent = dados.qtd_pallet || 0;
+            document.getElementById('view-turno').textContent = dados.turno || '-';
+            document.getElementById('view-linha_montagem').textContent = dados.linha_montagem || '-';
+            document.getElementById('view-inspetor').textContent = dados.inspetor || '-';
+
+            const statusBadge = document.getElementById('view-status');
+            const statusTexto = getStatusTexto(dados.status);
+            const statusClass = getStatusClass(dados.status);
+            statusBadge.innerHTML = `<span class="badge ${statusClass}">${statusTexto}</span>`;
+
+            const observacaoElement = document.getElementById('view-observacao');
+            if (dados.observacao && dados.observacao.trim() !== '') {
+                observacaoElement.textContent = dados.observacao;
+                observacaoElement.style.color = '#2c3e50';
+            } else {
+                observacaoElement.textContent = 'Sem observações registradas';
+                observacaoElement.style.color = '#6c757d';
+                observacaoElement.style.fontStyle = 'italic';
+            }
+        }
+
+        // Editar registro
+        async function editarRegistro(id) {
+            try {
+                const response = await fetch(`${API_URL}/${id}`);
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    preencherFormulario(result.data);
+                    currentRegistroId = id;
+                    isEditing = true;
+                    document.getElementById('modal-title').textContent = 'Editar Registro de Inspeção';
+                    document.getElementById('modal-save-btn').textContent = 'Salvar Alterações';
+                    abrirModal();
+
+                    setTimeout(() => {
+                        setupTabs();
+                        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+                        document.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+                        document.querySelector('.tab[data-tab="dados-gerais"]').classList.add('active');
+                        document.getElementById('dados-gerais').classList.add('active');
+                        toggleNaoConformidade();
+                    }, 100);
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar registro');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarErro('Não foi possível carregar os dados do registro');
+            }
+        }
+
+        // Editar da visualização
+        function editarDaVisualizacao() {
+            fecharModalVisualizacao();
+            editarRegistro(currentRegistroId);
+        }
+
+        // Preencher formulário
+        function preencherFormulario(dados) {
+            document.getElementById('data_inspecao').value = dados.data_inspecao || '';
+            document.getElementById('semana').value = dados.semana || '';
+            document.getElementById('cod_sap').value = dados.cod_sap || '';
+            document.getElementById('linha').value = dados.linha || '';
+            document.getElementById('familia').value = dados.familia || '';
+            document.getElementById('modelo').value = dados.modelo || '';
+            document.getElementById('descricao_sap').value = dados.descricao_sap || '';
+            document.getElementById('qtd_total').value = dados.qtd_total || 0;
+            document.getElementById('qtd_inspecionada').value = dados.qtd_inspecionada || 0;
+            document.getElementById('qtd_nc').value = dados.qtd_nc || 0;
+            document.getElementById('qtd_pallet').value = dados.qtd_pallet || 0;
+            document.getElementById('rastreabilidade').value = dados.rastreabilidade || '';
+            document.getElementById('po').value = dados.po || '';
+            document.getElementById('turno').value = dados.turno || '';
+            document.getElementById('linha_montagem').value = dados.linha_montagem || '';
+            document.getElementById('inspetor').value = dados.inspetor || '';
+            document.getElementById('status').value = dados.status || 'pendente';
+            document.getElementById('observacao').value = dados.observacao || '';
+            document.getElementById('documento').value = dados.documento || '';
+            document.getElementById('defeito').value = dados.defeito || '';
+            document.getElementById('prioridade').value = dados.prioridade || '';
+            document.getElementById('origem_problema').value = dados.origem_problema || '';
+            document.getElementById('codigo_barras').value = dados.codigo_barras || '';
+        }
+
+        // Limpar formulário
+        function limparFormulario() {
+            document.getElementById('registro-form').reset();
+            if (window.auth) {
+                document.getElementById('inspetor').value = auth.getUserName();
+            }
+            // Limpar info do código de barras
+            const barcodeInfo = document.getElementById('descricao_produto_barcode');
+            if (barcodeInfo) {
+                barcodeInfo.className = 'barcode-info';
+                barcodeInfo.textContent = '';
+            }
+        }
+
+        // Salvar registro
+        async function salvarRegistro(evento) {
+            evento.preventDefault();
+
+            const dados = {
+                data_inspecao: document.getElementById('data_inspecao').value,
+                semana: document.getElementById('semana').value,
+                cod_sap: document.getElementById('cod_sap').value,
+                linha: document.getElementById('linha').value,
+                familia: document.getElementById('familia').value,
+                modelo: document.getElementById('modelo').value,
+                descricao_sap: document.getElementById('descricao_sap').value,
+                qtd_total: parseInt(document.getElementById('qtd_total').value) || 0,
+                qtd_inspecionada: parseInt(document.getElementById('qtd_inspecionada').value) || 0,
+                qtd_nc: parseInt(document.getElementById('qtd_nc').value) || 0,
+                qtd_pallet: parseInt(document.getElementById('qtd_pallet').value) || 0,
+                rastreabilidade: document.getElementById('rastreabilidade').value,
+                po: document.getElementById('po').value,
+                turno: document.getElementById('turno').value,
+                linha_montagem: document.getElementById('linha_montagem').value,
+                inspetor: document.getElementById('inspetor').value,
+                status: document.getElementById('status').value,
+                observacao: document.getElementById('observacao').value,
+                documento: document.getElementById('documento').value,
+                defeito: document.getElementById('defeito').value,
+                prioridade: document.getElementById('prioridade').value,
+                origem_problema: document.getElementById('origem_problema').value,
+                codigo_barras: document.getElementById('codigo_barras').value
+            };
+
+            if (!dados.cod_sap || !dados.modelo || !dados.inspetor) {
+                mostrarAviso('Por favor, preencha todos os campos obrigatórios');
+                return;
+            }
+
+            const url = isEditing ? `${API_URL}/${currentRegistroId}` : API_URL;
+            const method = isEditing ? 'PUT' : 'POST';
+
+            try {
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(dados)
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    mostrarSucesso(isEditing ? 'Registro atualizado com sucesso!' : 'Registro criado com sucesso!');
+                    await carregarRegistros();
+                    fecharModal();
+                } else {
+                    throw new Error(result.message || 'Erro ao salvar registro');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarErro(`Falha ao salvar registro: ${error.message}`);
+            }
+        }
+
+        // Excluir registro
+        async function excluirRegistro(id) {
+            if (!confirm('Tem certeza que deseja excluir este registro? Esta ação não pode ser desfeita.')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_URL}/${id}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+
+                const result = await response.json();
+
+                if (result.success) {
+                    mostrarSucesso('Registro excluído com sucesso!');
+                    await new Promise(resolve => setTimeout(resolve, 500));
+                    await carregarRegistros();
+                } else {
+                    throw new Error(result.message || 'Erro ao excluir registro');
+                }
+            } catch (error) {
+                console.error('Erro:', error);
+                mostrarErro(`Falha ao excluir registro: ${error.message}`);
+            }
+        }
+
+        // Filtrar registros
+        function filtrarRegistros() {
+            const termoBusca = document.getElementById('search-input').value.toLowerCase();
+
+            if (termoBusca === '') {
+                preencherTabela(allRegistros);
+                return;
+            }
+
+            const registrosFiltrados = allRegistros.filter(registro => {
+                const codSap = (registro.cod_sap || '').toLowerCase();
+                const modelo = (registro.modelo || '').toLowerCase();
+                const inspetor = (registro.inspetor || '').toLowerCase();
+                const familia = (registro.familia || '').toLowerCase();
+
+                return codSap.includes(termoBusca) ||
+                    modelo.includes(termoBusca) ||
+                    inspetor.includes(termoBusca) ||
+                    familia.includes(termoBusca);
+            });
+
+            preencherTabela(registrosFiltrados);
+        }
+
+        // Funções de modal
+        function abrirModal() {
+            const modal = document.getElementById('registro-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.style.opacity = 1, 10);
+        }
+
+        function fecharModal() {
+            const modal = document.getElementById('registro-modal');
+            modal.style.opacity = 0;
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        function abrirModalVisualizacao() {
+            const modal = document.getElementById('view-modal');
+            modal.style.display = 'flex';
+            setTimeout(() => modal.style.opacity = 1, 10);
+        }
+
+        function fecharModalVisualizacao() {
+            const modal = document.getElementById('view-modal');
+            modal.style.opacity = 0;
+            setTimeout(() => modal.style.display = 'none', 300);
+        }
+
+        // Funções de impressão
+        async function imprimirCartao(id) {
+            try {
+                console.log('📄 Preparando impressão do cartão, ID:', id);
+                
+                fecharModalVisualizacao();
+                
+                console.log('🔍 Buscando dados do registro...');
+                const response = await fetch(`${API_URL}/${id}`);
+                
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                
+                const result = await response.json();
+                console.log('✅ Dados recebidos:', result);
+
+                if (result.success && result.data) {
+                    console.log('📝 Preenchendo cartão de impressão...');
+                    preencherCartaoImpressao(result.data);
+                    
+                    console.log('🚀 Abrindo modal de impressão...');
+                    abrirModalImpressao();
+                    
+                    console.log('✅ Modal de impressão aberto com sucesso!');
+                } else {
+                    throw new Error(result.message || 'Erro ao carregar dados');
+                }
+            } catch (error) {
+                console.error('❌ Erro ao preparar impressão:', error);
+                mostrarErro('Não foi possível preparar o cartão para impressão');
+            }
+        }
+
+        async function calcularPaletesAfetados(dados) {
+            try {
+                const response = await fetch(`${API_URL}?cod_sap=${dados.cod_sap}&linha_montagem=${dados.linha_montagem}`);
+                
+                if (!response.ok) {
+                    console.log('Não foi possível buscar histórico');
+                    return null;
+                }
+
+                const result = await response.json();
+                
+                if (!result.success || !result.data) {
+                    return null;
+                }
+
+                const registrosRelacionados = result.data.filter(r => 
+                    r.cod_sap === dados.cod_sap && 
+                    r.linha_montagem === dados.linha_montagem &&
+                    r.id !== dados.id
+                );
+
+                registrosRelacionados.sort((a, b) => 
+                    new Date(b.data_inspecao) - new Date(a.data_inspecao)
+                );
+
+                const ultimaAprovada = registrosRelacionados.find(r => 
+                    r.status?.toLowerCase() === 'aprovado' &&
+                    new Date(r.data_inspecao) < new Date(dados.data_inspecao)
+                );
+
+                if (ultimaAprovada && ultimaAprovada.qtd_pallet) {
+                    const paleteInicial = parseInt(ultimaAprovada.qtd_pallet) + 1;
+                    const paleteFinal = parseInt(dados.qtd_pallet);
+                    const qtdBloqueados = paleteFinal - paleteInicial + 1;
+
+                    return {
+                        paleteInicial,
+                        paleteFinal,
+                        qtdBloqueados,
+                        encontrouHistorico: true
+                    };
+                }
+
+                return null;
+
+            } catch (error) {
+                console.error('Erro ao calcular paletes:', error);
+                return null;
+            }
+        }
+
+        function preencherCartaoImpressao(dados) {
+            console.log('📋 Preenchendo cartão com dados:', dados);
+            
+            const printCodSap = document.getElementById('print-cod-sap');
+            const printModelo = document.getElementById('print-modelo');
+            const printDescricao = document.getElementById('print-descricao');
+            const printData = document.getElementById('print-data');
+            const printTurno = document.getElementById('print-turno');
+            const printLinhaMontagem = document.getElementById('print-linha-montagem');
+            const printInspetor = document.getElementById('print-inspetor');
+            const printRastreabilidade = document.getElementById('print-rastreabilidade');
+            const printPo = document.getElementById('print-po');
+            const printObservacao = document.getElementById('print-observacao');
+
+            if (printCodSap) printCodSap.textContent = dados.cod_sap || 'N/A';
+            if (printModelo) printModelo.textContent = dados.modelo || 'N/A';
+            if (printDescricao) printDescricao.textContent = dados.descricao_sap || 'Sem descrição';
+            if (printData) printData.textContent = formatarData(dados.data_inspecao);
+            if (printTurno) printTurno.textContent = dados.turno || 'N/A';
+            if (printLinhaMontagem) printLinhaMontagem.textContent = dados.linha_montagem || 'N/A';
+            if (printInspetor) printInspetor.textContent = dados.inspetor || 'N/A';
+            if (printRastreabilidade) printRastreabilidade.textContent = dados.rastreabilidade || 'N/A';
+            if (printPo) printPo.textContent = dados.po || 'N/A';
+            if (printObservacao) printObservacao.textContent = dados.observacao || 'Sem observações';
+
+            const statusBadge = document.getElementById('print-status-badge');
+            if (statusBadge) {
+                const statusLower = (dados.status || '').toLowerCase();
+                const statusTexto = getStatusTexto(dados.status);
+                
+                if (statusLower === 'aprovado') {
+                    statusBadge.style.background = '#d4edda';
+                    statusBadge.style.color = '#155724';
+                } else if (statusLower === 'reprovado') {
+                    statusBadge.style.background = '#f8d7da';
+                    statusBadge.style.color = '#721c24';
+                } else {
+                    statusBadge.style.background = '#fff3cd';
+                    statusBadge.style.color = '#856404';
+                }
+                statusBadge.textContent = statusTexto;
+            }
+
+            const paletesInfo = document.getElementById('print-paletes-liberados');
+            const paletesContainer = paletesInfo?.parentElement;
+            
+            if (paletesInfo) {
+                const statusLower = (dados.status || '').toLowerCase();
+                const qtdPaletes = dados.qtd_pallet || 0;
+                
+                if (statusLower === 'reprovado') {
+                    paletesInfo.innerHTML = `<strong>🔄 Calculando paletes bloqueados...</strong>`;
+                    if (paletesContainer) {
+                        paletesContainer.style.background = 'linear-gradient(135deg, #ffebee 0%, #ffcdd2 100%)';
+                        paletesContainer.style.borderLeft = '5px solid #f44336';
+                    }
+
+                    calcularPaletesAfetados(dados).then(resultado => {
+                        if (resultado && resultado.encontrouHistorico) {
+                            paletesInfo.innerHTML = `
+                                <strong>🚫 Paletes Bloqueados:</strong> ${resultado.paleteInicial} ao ${resultado.paleteFinal}
+                                <br>
+                                <small style="font-size: 0.9rem; opacity: 0.9;">
+                                    Total de ${resultado.qtdBloqueados} palete${resultado.qtdBloqueados > 1 ? 's' : ''} bloqueado${resultado.qtdBloqueados > 1 ? 's' : ''}
+                                </small>
+                            `;
+                        } else {
+                            paletesInfo.innerHTML = `
+                                <strong>🚫 Paletes Bloqueados:</strong> 1 ao ${qtdPaletes}
+                                <br>
+                                <small style="font-size: 0.9rem; opacity: 0.9;">
+                                    Total de ${qtdPaletes} palete${qtdPaletes > 1 ? 's' : ''} bloqueado${qtdPaletes > 1 ? 's' : ''} (sem histórico de aprovação)
+                                </small>
+                            `;
+                        }
+                    });
+
+                } else if (statusLower === 'aprovado') {
+                    paletesInfo.innerHTML = `
+                        <strong>✅ Paletes Liberados:</strong> 1 ao ${qtdPaletes}
+                        <br>
+                        <small style="font-size: 0.9rem; opacity: 0.9;">
+                            Total de ${qtdPaletes} palete${qtdPaletes > 1 ? 's' : ''} liberado${qtdPaletes > 1 ? 's' : ''}
+                        </small>
+                    `;
+                    if (paletesContainer) {
+                        paletesContainer.style.background = 'linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%)';
+                        paletesContainer.style.borderLeft = '5px solid #4caf50';
+                    }
+                } else {
+                    paletesInfo.innerHTML = `
+                        <strong>⏳ Paletes Aguardando Liberação:</strong> 1 ao ${qtdPaletes}
+                        <br>
+                        <small style="font-size: 0.9rem; opacity: 0.9;">
+                            Total de ${qtdPaletes} palete${qtdPaletes > 1 ? 's' : ''} pendente${qtdPaletes > 1 ? 's' : ''}
+                        </small>
+                    `;
+                    if (paletesContainer) {
+                        paletesContainer.style.background = 'linear-gradient(135deg, #fff3e0 0%, #ffe0b2 100%)';
+                        paletesContainer.style.borderLeft = '5px solid #ff9800';
+                    }
+                }
+            }
+
+            const emissionDate = document.getElementById('print-emission-date');
+            if (emissionDate) {
+                const agora = new Date();
+                emissionDate.textContent = `Emitido em: ${agora.toLocaleDateString('pt-BR')} às ${agora.toLocaleTimeString('pt-BR')}`;
+            }
+
+            console.log('✅ Cartão preenchido com sucesso!');
+        }
+
+        function abrirModalImpressao() {
+            console.log('🎯 Tentando abrir modal de impressão...');
+            const modal = document.getElementById('print-modal');
+            
+            if (!modal) {
+                console.error('❌ Modal de impressão não encontrado!');
+                mostrarErro('Erro: Modal de impressão não encontrado');
+                return;
+            }
+            
+            console.log('✅ Modal encontrado:', modal);
+            
+            modal.style.display = 'flex';
+            modal.style.opacity = '0';
+            
+            setTimeout(() => {
+                modal.style.opacity = '1';
+                console.log('✅ Modal de impressão exibido!');
+            }, 10);
+        }
+
+        function fecharModalImpressao() {
+            const modal = document.getElementById('print-modal');
+            if (modal) {
+                modal.style.opacity = '0';
+                setTimeout(() => {
+                    modal.style.display = 'none';
+                }, 300);
+            }
+        }
+
+        function executarImpressao() {
+            window.print();
+        }
+
+        // Funções de notificação
+        function mostrarSucesso(mensagem) {
+            toast.show('Sucesso', mensagem, 'success');
+        }
+
+        function mostrarErro(mensagem) {
+            toast.show('Erro', mensagem, 'error');
+        }
+
+        function mostrarAviso(mensagem) {
+            toast.show('Atenção', mensagem, 'warning');
+        }
+
+        // Tornar funções globais
+        window.visualizarRegistro = visualizarRegistro;
+        window.editarRegistro = editarRegistro;
+        window.excluirRegistro = excluirRegistro;
+        window.imprimirCartao = imprimirCartao;
+        window.selecionarProduto = selecionarProduto;
+    </script>
+
+    <script src="auth.js"></script>
+    <script>
+        // Marcar o link ativo
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.nav-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.getElementById('nav-registros').classList.add('active');
+        });
+    </script>
+</body>
+
+</html>
